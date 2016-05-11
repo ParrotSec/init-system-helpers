@@ -1,0 +1,7 @@
+autoscripts usr/share/debhelper
+lib/Debian/Debhelper/Sequence/systemd.pm usr/share/perl5/Debian/Debhelper/Sequence/
+script/dh_systemd_enable usr/bin
+script/dh_systemd_start usr/bin
+systemd2init/skeleton.debian usr/share/dh-systemd
+systemd2init/skeleton.redhat usr/share/dh-systemd
+systemd2init/systemd2init usr/bin

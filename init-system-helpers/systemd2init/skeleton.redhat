@@ -1,0 +1,121 @@
+#!/bin/sh
+#
+# #NAME# #DESC#
+#
+# chkconfig:   2345 20 80
+# description: #DESC#
+#
+
+### BEGIN INIT INFO
+# Provides: #NAME#
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: #DESC#
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+NAME=#NAME#
+DAEMON=#DAEMON#
+DAEMON_ARGS="#DAEMON_ARGS#"
+PIDFILE=#PIDFILE#
+CUSTOM_STOP=#CUSTOM_STOP#
+STOP_COMMAND=#STOP_COMMAND#
+STOP_ARGS=#STOP_ARGS#
+CUSTOM_RELOAD=#CUSTOM_RELOAD#
+RELOAD_COMMAND=#RELOAD_COMMAND#
+RELOAD_ARGS=#RELOAD_ARGS#
+#ENVIRONMENT#
+
+[ -e /etc/sysconfig/$NAME ] && . /etc/sysconfig/$NAME
+
+lockfile=/var/lock/subsys/$NAME
+
+start() {
+	[ -x $DAEMON ] || exit 5
+	echo -n $"Starting $NAME: "
+	#STARTPRE#
+	daemon --pidfile $PIDFILE $DAEMON $DAEMON_ARGS
+	retval=$?
+	#STARTPOST#
+	echo
+	[ $retval -eq 0 ] && touch $lockfile
+	return $retval
+}
+
+stop() {
+	echo -n $"Stopping $NAME: "
+	#STOPPRE#
+	if $CUSTOM_STOP; then
+		$STOP_COMMAND $STOP_ARGS
+	else
+		killproc -p $PIDFILE $DAEMON
+	fi
+	retval=$?
+	#STOPPOST#
+	echo
+	[ $retval -eq 0 ] && rm -f $lockfile
+	return $retval
+}
+
+restart() {
+	if $CUSTOM_RELOAD; then
+		$RELOAD_COMMAND $RELOAD_ARGS
+	else
+		stop
+		start
+	fi
+}
+
+reload() {
+	restart
+}
+
+force_reload() {
+	restart
+}
+
+rh_status() {
+	status $NAME
+}
+
+rh_status_q() {
+	rh_status >/dev/null 2>&1
+}
+
+case "$1" in
+	start)
+		rh_status_q && exit 0
+		$1
+		;;
+	stop)
+		rh_status_q || exit 0
+		$1
+		;;
+	restart)
+		$1
+		;;
+	reload)
+		rh_status_q || exit 7
+		$1
+		;;
+	force-reload)
+		force_reload
+		;;
+	status)
+		rh_status
+		;;
+	condrestart|try-restart)
+		rh_status_q || exit 0
+		restart
+		;;
+	*)
+		echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload}"
+		exit 2
+esac
+exit $?
+
+# vim:noet:sw=4:ts=4

@@ -1,0 +1,5 @@
+Tests: t
+Depends: @,
+  cpanminus,
+  build-essential
+Restrictions: needs-root, allow-stderr, isolation-container

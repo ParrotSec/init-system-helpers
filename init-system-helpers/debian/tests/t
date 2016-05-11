@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+mount --make-rprivate /
+cpanm Linux::Clone
+
+for test in t/*.t; do
+    echo "======== $(basename $test) ======="
+    perl $test
+done

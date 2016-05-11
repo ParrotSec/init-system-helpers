@@ -1,0 +1,15 @@
+These test cases need the Linux::Clone module, which is not yet in Debian.
+See http://michael.stapelberg.de/cpan/#Linux::Clone on how to install it.
+
+Note that you need to run the test cases as root because they use Linux mount
+namespaces and bind mounts (requires Linux ≥ 2.4.19).
+
+Note that you should mark / as a private subtree before running these tests, or
+they will fail. Use mount --make-rprivate /. Unfortunately, the version of
+util-linux in Debian at the time of writing (2.20.1) is broken and its
+--make-rprivate does not actually work. See #731574.
+
+The intention is that the testcases are _not_ run automatically during package
+building because they might be too fragile and additional dependencies make it
+harder to port this package to Ubuntu or Debian backports. It is enough if the
+test cases are run on every code change.
