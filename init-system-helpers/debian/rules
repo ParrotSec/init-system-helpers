@@ -10,6 +10,7 @@
 #export DH_VERBOSE=1
 
 BUILD_DATE = $(shell dpkg-parsechangelog -S Date)
+VERSION = $(shell dpkg-parsechangelog -S Version)
 POD_MAN_DATE = $(shell date -u +"%Y-%m-%d" --date="$(BUILD_DATE)")
 export POD_MAN_DATE
 
@@ -28,6 +29,7 @@ override_dh_install-indep:
 	dh_install
 	mv $(SBIN)/update-rc.d $(SBIN)/debian-update-rc.d
 	cp script/parrot-update-rc.d $(SBIN)/update-rc.d
+	[ ! -d debian/init-system-helpers ] || sed -i 's/__VERSION__/$(VERSION)/' debian/init-system-helpers/usr/sbin/service
 
 %:
 	dh $@ 

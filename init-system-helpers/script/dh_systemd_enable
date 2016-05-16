@@ -102,6 +102,8 @@ sub contains_install_section {
 	return 0;
 }
 
+# PROMISE: DH NOOP WITHOUT tmp(lib/systemd/system) mount service socket target tmpfile
+
 foreach my $package (@{$dh{DOPACKAGES}}) {
 	my $tmpdir = tmpdir($package);
 	my @installed_units;
@@ -146,6 +148,16 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 		doit("install","-p","-m644",$service,"$path/$script.service");
 	}
 
+	my $target=pkgfile($package,"target");
+	if ($target ne '') {
+		my $path="$tmpdir/lib/systemd/system";
+		if (! -d "$path") {
+			doit("install","-d","$path");
+		}
+
+		doit("install","-p","-m644",$target,"$path/$script.target");
+	}
+
 	my $socket=pkgfile($package,"socket");
 	if ($socket ne '') {
 		my $path="$tmpdir/lib/systemd/system";
@@ -166,6 +178,16 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 		doit("install","-p","-m644",$tmpfile,"$path/$script.conf");
 	}
 
+	my $mount=pkgfile($package,"mount");
+	if ($mount ne '') {
+		my $path="$tmpdir/usr/lib/system";
+		if (! -d "$path") {
+			doit("install","-d","$path");
+		}
+
+		doit("install","-p","-m644",$mount,"$path/$script.mount");
+	}
+
 	find({
 		wanted => sub {
 			my $name = $File::Find::name;
@@ -178,7 +200,7 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 			push @installed_units, $name;
 		},
 		no_chdir => 1,
-	}, $tmpdir);
+	}, "${tmpdir}/lib/systemd/system") if -d "${tmpdir}/lib/systemd/system";
 
 	# Handle either only the unit files which were passed as arguments or
 	# all unit files that are installed in this package.

@@ -1,6 +1,7 @@
 #! /usr/bin/perl
 
-# We want that fuckin' shit to be automatically disabled at boot!
+# Wrapper around update-rc.d that auto-disables service that we don't
+# want to start by default.
 
 use strict;
 use warnings;
@@ -32,23 +33,23 @@ if (exists $ENV{'DPKG_RUNNING_VERSION'} and
     # We're in a maint-script and we're about to install a new init script
     if (exists $status_wanted{$bn}) {
 	if ($status_wanted{$bn} eq "disabled") {
-	    print STDERR "update-rc.d: Disabling $bn init script as per Parrot policy as it seems a network service. (you shall not pass!)\n";
+	    print STDERR "update-rc.d: $bn disabled for Parrot policies init disabled\n";
 	    system("/usr/sbin/debian-update-rc.d", @orig_argv);
 	    system("/usr/sbin/debian-update-rc.d", $bn, "disable");
 	    exit 0;
 	}
     } else {
 	my $header = parse_lsb_header("/etc/init.d/$bn");
-	print STDERR "update-rc.d: Disabling $bn init script as per Parrot policy as it seems a network service. (you shall not pass!)\n";
+	print STDERR "update-rc.d: We have no instructions for the $bn init script.\n";
 	if ($header->{'required-start'} =~ /\$network/ ||
 	    $header->{'should-start'} =~ /\$network/)
 	{
-	    print STDERR "update-rc.d: We disable it as per Parrot policy as it seems a network service. (you shall not pass!)\n";
+	    print STDERR "update-rc.d: Parrot recognized it as a network service, we disable it. (You shall not pass!)\n";
 	    system("/usr/sbin/debian-update-rc.d", @orig_argv);
 	    system("/usr/sbin/debian-update-rc.d", $bn, "disable");
 	    exit 0;
 	} else {
-	    print STDERR "update-rc.d: Meh, it looks like a non-network service, we enable it.\n";
+	    print STDERR "update-rc.d: It doesn't seem to be a network service, we enable it.\n";
 	}
     }
 }
@@ -89,7 +90,6 @@ sub parse_lsb_header {
 }
 
 __DATA__
-__DATA__
 #
 # List of blacklisted init scripts
 #
@@ -97,11 +97,15 @@ apache2 disabled
 avahi-daemon disabled
 cups disabled
 dictd disabled
+dhcpdc disabled
 exim4 disabled
+greenbone-security-assistant disabled
 iodined disabled
 procmail disabled
 minissdpd disabled
 openbsd-inetd disabled
+openvas-manager disabled
+openvas-scanner disabled
 postfix disabled
 postgresql disabled
 rpcbind disabled
@@ -122,6 +126,8 @@ atd enabled
 atop enabled
 binfmt-support enabled
 bluetooth enabled
+blueman enabled
+bluez enabled
 bootlogs enabled
 bootmisc.sh enabled
 checkfs.sh enabled
@@ -133,6 +139,7 @@ cron enabled
 cryptdisks-early enabled
 cryptdisks enabled
 dbus enabled
+dnsmasq enabled
 ebtables enabled
 etc-setserial enabled
 fetchmail enabled
@@ -168,6 +175,7 @@ pulseaudio enabled
 qemu-kvm enabled
 rc.local enabled
 rdnssd enabled
+resolvconf enabled
 restorecond enabled
 rmnologin enabled
 rsync enabled

@@ -18,6 +18,7 @@ sub usage {
 	print STDERR "update-rc.d: error: @_\n" if ($#_ >= 0);
 	print STDERR <<EOF;
 usage: update-rc.d [-n] [-f] <basename> remove
+       update-rc.d [-n] [-f] <basename> defaults
        update-rc.d [-n] <basename> disable|enable [S|2|3|4|5]
 		-n: not really
 		-f: force
@@ -194,7 +195,7 @@ sub insserv_updatercd {
         shift @args;
         if (/^-n$/) { push(@opts, $_); $notreally++; next }
         if (/^-f$/) { push(@opts, $_); next }
-        if (/^-h|--help$/) { &usage; }
+        if (/^-h|--help$/) { usage(); }
         usage("unknown option");
     }
 

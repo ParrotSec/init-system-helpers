@@ -41,7 +41,7 @@ is_ignored_file() {
 	return 1
 }
 
-VERSION="`basename $0` ver. 0.91-ubuntu1"
+VERSION="`basename $0` ver. __VERSION__"
 USAGE="Usage: `basename $0` < option > | --status-all | \
 [ service_name [ command | --full-restart ] ]"
 SERVICE=

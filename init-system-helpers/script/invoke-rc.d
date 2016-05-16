@@ -295,14 +295,21 @@ elif test ! -f "${INITDPREFIX}${INITSCRIPTID}" ; then
 fi
 
 ## Queries sysvinit for the current runlevel
-RL=`${RUNLEVELHELPER} | sed 's/.*\ //'`
-if test ! $? ; then
-    printerror "could not determine current runlevel"
-    if test x${RETRY} = x ; then
-	exit 102
+if ! RL=`${RUNLEVELHELPER}`; then
+    if [ -n "$is_systemd" ] && systemctl is-active --quiet sysinit.target; then
+        # under systemd, the [2345] runlevels are only set upon reaching them;
+        # if we are past sysinit.target (roughly equivalent to rcS), consider
+        # this as runlevel 5 (this is only being used for validating rcN.d
+        # symlinks, so the precise value does not matter much)
+        RL=5
+    else
+        printerror "could not determine current runlevel"
+        # this usually fails in schroots etc., ignore failure (#823611)
+        RL=
     fi
-    RL=
 fi
+# strip off previous runlevel
+RL=${RL#* }
 
 ## Running ${RUNLEVELHELPER} to get current runlevel do not work in
 ## the boot runlevel (scripts in /etc/rcS.d/), as /var/run/utmp

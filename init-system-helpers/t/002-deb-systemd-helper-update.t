@@ -54,9 +54,11 @@ sub bind_mount_tmp {
     return $tmp;
 }
 
-my $etc_systemd = bind_mount_tmp('/etc/systemd');
-my $lib_systemd = bind_mount_tmp('/lib/systemd');
-my $var_lib_systemd = bind_mount_tmp('/var/lib/systemd');
+unless ($ENV{'TEST_ON_REAL_SYSTEM'}) {
+    my $etc_systemd = bind_mount_tmp('/etc/systemd');
+    my $lib_systemd = bind_mount_tmp('/lib/systemd');
+    my $var_lib_systemd = bind_mount_tmp('/var/lib/systemd');
+}
 
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃ Verify “is-enabled” is not true for a random, non-existing unit file.     ┃

@@ -6,9 +6,9 @@ Uploaders: Michael Biebl <biebl@debian.org>,
            Martin Pitt <mpitt@debian.org>,
 Build-Depends: debhelper (>= 9),
                perl:any,
-Standards-Version: 3.9.6
-Vcs-Git: git://anonscm.debian.org/collab-maint/init-system-helpers.git
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/init-system-helpers.git;a=summary
+Standards-Version: 3.9.8
+Vcs-Git: https://anonscm.debian.org/git/collab-maint/init-system-helpers.git
+Vcs-Browser: https://anonscm.debian.org/git/collab-maint/init-system-helpers.git
 
 Package: init-system-helpers
 Architecture: all
@@ -65,7 +65,7 @@ Multi-Arch: foreign
 Pre-Depends: systemd-sysv [linux-any] | sysvinit-core,
 Depends: init-system-helpers,
          ${misc:Depends},
-Description: System-V-like init utilities - metapackage
+Description: init metapackage
  This package is an essential metapackage which allows you to select from
  the available init systems in Debian (systemd, sysvinit) while
  ensuring that one of these is available on the system at all times.

@@ -44,9 +44,11 @@ sub bind_mount_tmp {
     return $tmp;
 }
 
-my $etc_systemd = bind_mount_tmp('/etc/systemd');
-my $lib_systemd = bind_mount_tmp('/lib/systemd');
-my $var_lib_systemd = bind_mount_tmp('/var/lib/systemd');
+unless ($ENV{'TEST_ON_REAL_SYSTEM'}) {
+    my $etc_systemd = bind_mount_tmp('/etc/systemd');
+    my $lib_systemd = bind_mount_tmp('/lib/systemd');
+    my $var_lib_systemd = bind_mount_tmp('/var/lib/systemd');
+}
 
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃ Create two unit files with random names; one refers to the other (Also=). ┃
@@ -106,12 +108,16 @@ isnt_debian_installed($random_unit2);
 # ┃ Verify “enable” creates all symlinks.                                     ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-ok(! -d '/etc/systemd/system/multi-user.target.wants',
-    'multi-user.target.wants does not exist yet');
+unless ($ENV{'TEST_ON_REAL_SYSTEM'}) {
+    # This might already exist if we don't start from a fresh directory
+    ok(! -d '/etc/systemd/system/multi-user.target.wants',
+       'multi-user.target.wants does not exist yet');
+}
 
 $retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh enable $random_unit1");
 my %links = map { (basename($_), readlink($_)) }
-    </etc/systemd/system/multi-user.target.wants/*.service>;
+    ("/etc/systemd/system/multi-user.target.wants/$random_unit1",
+     "/etc/systemd/system/multi-user.target.wants/$random_unit2");
 is_deeply(
     \%links,
     {

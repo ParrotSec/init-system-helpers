@@ -44,9 +44,11 @@ sub bind_mount_tmp {
     return $tmp;
 }
 
-my $etc_systemd = bind_mount_tmp('/etc/systemd');
-my $lib_systemd = bind_mount_tmp('/lib/systemd');
-my $var_lib_systemd = bind_mount_tmp('/var/lib/systemd');
+unless ($ENV{'TEST_ON_REAL_SYSTEM'}) {
+    my $etc_systemd = bind_mount_tmp('/etc/systemd');
+    my $lib_systemd = bind_mount_tmp('/lib/systemd');
+    my $var_lib_systemd = bind_mount_tmp('/var/lib/systemd');
+}
 
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃ Verify “is-enabled” is not true for a random, non-existing unit file.     ┃
@@ -88,8 +90,11 @@ isnt_debian_installed($random_unit);
 # ┃ Verify “enable” creates the requested symlinks.                           ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-ok(! -d '/etc/systemd/system/multi-user.target.wants',
-    'multi-user.target.wants does not exist yet');
+unless ($ENV{'TEST_ON_REAL_SYSTEM'}) {
+    # This might exist if we don't start from a fresh directory
+    ok(! -d '/etc/systemd/system/multi-user.target.wants',
+       'multi-user.target.wants does not exist yet');
+}
 
 $retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh enable $random_unit");
 is($retval, 0, "enable command succeeded");
@@ -176,6 +181,7 @@ $retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh purge $random_unit");
 is($retval, 0, "purge command succeeded");
 
 isnt_enabled($random_unit);
+isnt_debian_installed($random_unit);
 
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃ Verify “enable” after purging does re-create the symlinks.                ┃
@@ -284,6 +290,9 @@ unlink($mask_path);
 # ┃ Verify Alias= handling.                                                   ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
+$retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh purge $random_unit");
+is($retval, 0, "purge command succeeded");
+
 open($fh, '>', $servicefile_path);
 print $fh <<'EOT';
 [Unit]
@@ -326,6 +335,8 @@ ok(! -l $alias_path, 'alias link does not exist any more');
 # ┃ Verify Alias/mask with removed package (as in postrm)                     ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
+$retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh purge $random_unit");
+is($retval, 0, "purge command succeeded");
 $retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh enable $random_unit");
 is($retval, 0, "enable command succeeded");
 is(readlink($alias_path), $servicefile_path, 'correct alias link');
@@ -370,7 +381,8 @@ isnt_enabled('footest.service');
 $retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh enable $random_unit");
 is($retval, 0, "enable command succeeded");
 is_enabled($random_unit);
-ok(! -l $mask_path, 'mask link does not exist yet');
+# systemctl enable does create the alias link even if it's not needed
+#ok(! -l $mask_path, 'mask link does not exist yet');
 
 unlink($servicefile_path);
 

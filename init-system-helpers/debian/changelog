@@ -1,3 +1,90 @@
+init-system-helpers (1.33+parrot0) testing; urgency=medium
+
+  * Import from Sheireen's commit
+
+ -- Lorenzo "Palinuro" Faletra <eclipse@parrotsec.org>  Mon, 16 May 2016 17:14:07 +0200
+
+init-system-helpers (1.33+kali-to-parrot0) experimental; urgency=medium
+
+  [ Raphaël Hertzog ]
+  * Fix the test suite due to our changes to use "systemctl preset".
+
+  [ Sophie Brun ]
+  * Synchronize with Debian.
+
+  //thanks kali for this update, we love you :)
+
+ -- Lisetta "Sheireen" Ferrero <sheireen@autistiche.org>  Tue, 15 Mar 2016 22:35:12 +0400
+
+init-system-helpers (1.33) unstable; urgency=medium
+
+  * Drop SysV reference from init's short package description, as it's not
+    specific to SysV init at all.
+  * Revert the check for failing "runlevel" command. In chroots it is always
+    failing, so just print out the warning and otherwise ignore the failure as
+    we've done for many years with the broken check. (Closes: #823611)
+
+ -- Martin Pitt <mpitt@debian.org>  Fri, 06 May 2016 09:44:05 -0500
+
+init-system-helpers (1.32) unstable; urgency=medium
+
+  * dh_systemd_{enable,start}: Quiesce "No such file or directory" error
+    messages when calling on a package without /lib/systemd/system/.
+    (Closes: #822710)
+  * invoke-rc.d: Fix check for failing "runlevel" command.
+  * invoke-rc.d: Under systemd, "runlevel" only switches to 3 or 5 when
+    multi-user.target/graphical.target have been reached, not before.
+    Adjust the runlevel check accordingly. This is only relevant for the check
+    for wrong/dangling rcN.d/ symlinks, so just pin it to "5" (the precise
+    value does not matter much). Fixing this in systemd requires bigger
+    architectural changes, so use this tiny (and backportable) bandaid for the
+    time being. (LP: #1575572, see #608456)
+
+ -- Martin Pitt <mpitt@debian.org>  Thu, 05 May 2016 22:11:26 -0500
+
+init-system-helpers (1.31) unstable; urgency=medium
+
+  * Fix FTBFS when building arch specific binaries only.
+
+ -- Martin Pitt <mpitt@debian.org>  Tue, 26 Apr 2016 17:37:46 +0200
+
+init-system-helpers (1.30) unstable; urgency=medium
+
+  [ Felipe Sateler ]
+  * update-rc.d: Add 'defaults' action to usage message. (Closes: #814666)
+  * update-rc.d: Do not print 'error:' when passing --help
+
+  [ Niels Thykier ]
+  * dh_systemd_start: Default to -R in compat 10, for consistency with
+    dh_installinit.
+  * dh_systemd_*: Do not needlessly traverse the entire package tree.
+  * dh_systemd_*: Add DH promise to avoid being called for no reason.
+  * Update Vcs-* fields to use https.
+
+  [ Raphaël Hertzog ]
+  * tests: Support $TEST_ON_REAL_SYSTEM which skips the tmpfs bind mounts, and
+    use that in the autopkgtest. This provides a more realistic test and
+    unbreaks operations which communicate with pid1. Also purge metadata in
+    between tests.
+  * Prefer calling "systemctl preset" instead of "enable" when available, so
+    that systemd.preset(5) files are respected by packages. (Closes: #772555)
+
+  [ Martin Pitt ]
+  * Bump Standards-Version to 3.9.8 (no changes necessary).
+  * Fix "service --version" to show the currrent instead some old hardcoded
+    version. (Closes: #819984)
+  * service.8: Document that $PATH is passed to the init script.
+    (Closes: #619464)
+
+  [ Erik Ziegenbalg ]
+  * dh-systemd: Support enabling of debian/<package>.mount files.
+    (Closes: #803774)
+
+  [ Luca Boccassi ]
+  * dh-systemd: Support installing .target files. (Closes: #793153)
+
+ -- Martin Pitt <mpitt@debian.org>  Tue, 26 Apr 2016 10:01:46 +0200
+
 init-system-helpers (1.29+parrot0) testing; urgency=medium
 
   * Import from Debian.
