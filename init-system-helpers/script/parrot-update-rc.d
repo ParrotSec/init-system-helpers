@@ -106,6 +106,7 @@ minissdpd disabled
 openbsd-inetd disabled
 openvas-manager disabled
 openvas-scanner disabled
+polipo disabled
 postfix disabled
 postgresql disabled
 rpcbind disabled
@@ -113,6 +114,7 @@ saned disabled
 ssh disabled
 winbind disabled
 tinyproxy disabled
+tor disabled
 pure-ftpd disabled
 #
 # List of whitelisted init scripts

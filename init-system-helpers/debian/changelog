@@ -1,3 +1,9 @@
+init-system-helpers (1.33+parrot1) testing; urgency=medium
+
+  * Blacklist polipo.service too.
+
+ -- Lorenzo "Palinuro" Faletra <eclipse@parrotsec.org>  Mon, 23 May 2016 16:43:44 +0200
+
 init-system-helpers (1.33+parrot0) testing; urgency=medium
 
   * Import from Sheireen's commit
