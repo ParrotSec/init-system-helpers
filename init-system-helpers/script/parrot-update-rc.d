@@ -157,6 +157,8 @@ kmod enabled
 libvirt-bin enabled
 libvirt-guests enabled
 lightdm enabled
+live-config enabled
+live-boot enabled
 loadcpufreq enabled
 lvm2 enabled
 lxc enabled
