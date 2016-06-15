@@ -1,26 +1,11 @@
-init-system-helpers (1.33+parrot1) testing; urgency=medium
+init-system-helpers (1.33+parrot2) testing; urgency=medium
 
-  * Blacklist polipo.service too.
+  * Add Parrot blacklist
+  * Add Parrot whitelist
+  * Add some jokes
+  * Modify the code to make network services automatically disabled 
 
- -- Lorenzo "Palinuro" Faletra <eclipse@parrotsec.org>  Mon, 23 May 2016 16:43:44 +0200
-
-init-system-helpers (1.33+parrot0) testing; urgency=medium
-
-  * Import from Sheireen's commit
-
- -- Lorenzo "Palinuro" Faletra <eclipse@parrotsec.org>  Mon, 16 May 2016 17:14:07 +0200
-
-init-system-helpers (1.33+kali-to-parrot0) experimental; urgency=medium
-
-  [ Raphaël Hertzog ]
-  * Fix the test suite due to our changes to use "systemctl preset".
-
-  [ Sophie Brun ]
-  * Synchronize with Debian.
-
-  //thanks kali for this update, we love you :)
-
- -- Lisetta "Sheireen" Ferrero <sheireen@autistiche.org>  Tue, 15 Mar 2016 22:35:12 +0400
+ -- Lorenzo "Palinuro" Faletra <eclipse@parrotsec.org>  Wed, 15 Jun 2016 17:08:56 +0200
 
 init-system-helpers (1.33) unstable; urgency=medium
 
@@ -90,13 +75,6 @@ init-system-helpers (1.30) unstable; urgency=medium
   * dh-systemd: Support installing .target files. (Closes: #793153)
 
  -- Martin Pitt <mpitt@debian.org>  Tue, 26 Apr 2016 10:01:46 +0200
-
-init-system-helpers (1.29+parrot0) testing; urgency=medium
-
-  * Import from Debian.
-  * Modify the project trying to disable some useless services.
-
- -- Lorenzo "Palinuro" Faletra <palinuro@frozenbox.org>  Mon, 04 Apr 2016 21:13:18 +0200
 
 init-system-helpers (1.29) unstable; urgency=medium
 

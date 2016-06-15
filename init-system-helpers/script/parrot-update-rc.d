@@ -33,7 +33,7 @@ if (exists $ENV{'DPKG_RUNNING_VERSION'} and
     # We're in a maint-script and we're about to install a new init script
     if (exists $status_wanted{$bn}) {
 	if ($status_wanted{$bn} eq "disabled") {
-	    print STDERR "update-rc.d: $bn disabled for Parrot policies init disabled\n";
+	    print STDERR "update-rc.d: $bn is in our deadpool blacklist! YOU SHALL NOT PASS!\n";
 	    system("/usr/sbin/debian-update-rc.d", @orig_argv);
 	    system("/usr/sbin/debian-update-rc.d", $bn, "disable");
 	    exit 0;
@@ -44,12 +44,12 @@ if (exists $ENV{'DPKG_RUNNING_VERSION'} and
 	if ($header->{'required-start'} =~ /\$network/ ||
 	    $header->{'should-start'} =~ /\$network/)
 	{
-	    print STDERR "update-rc.d: Parrot recognized it as a network service, we disable it. (You shall not pass!)\n";
+	    print STDERR "update-rc.d: It looks like a network service! YOU SHALL NOT PASS!\n";
 	    system("/usr/sbin/debian-update-rc.d", @orig_argv);
 	    system("/usr/sbin/debian-update-rc.d", $bn, "disable");
 	    exit 0;
 	} else {
-	    print STDERR "update-rc.d: It doesn't seem to be a network service, we enable it.\n";
+	    print STDERR "update-rc.d: It looks like a non-network service, we enable it.\n";
 	}
     }
 }
@@ -91,16 +91,19 @@ sub parse_lsb_header {
 
 __DATA__
 #
-# List of blacklisted init scripts
+# Deadpool
 #
 apache2 disabled
 avahi-daemon disabled
+clamav-daemon disabled
+clamav-freshclam disabled
 cups disabled
 dictd disabled
-dhcpdc disabled
+dhcpcd disabled
 exim4 disabled
 greenbone-security-assistant disabled
 iodined disabled
+postfix disabled
 procmail disabled
 minissdpd disabled
 openbsd-inetd disabled
@@ -117,7 +120,7 @@ tinyproxy disabled
 tor disabled
 pure-ftpd disabled
 #
-# List of whitelisted init scripts
+# Whitelist
 #
 acpid enabled
 acpi-fakekey enabled
@@ -128,8 +131,6 @@ atd enabled
 atop enabled
 binfmt-support enabled
 bluetooth enabled
-blueman enabled
-bluez enabled
 bootlogs enabled
 bootmisc.sh enabled
 checkfs.sh enabled
@@ -141,7 +142,6 @@ cron enabled
 cryptdisks-early enabled
 cryptdisks enabled
 dbus enabled
-dnsmasq enabled
 ebtables enabled
 etc-setserial enabled
 fetchmail enabled
@@ -156,6 +156,7 @@ keymap.sh enabled
 kmod enabled
 libvirt-bin enabled
 libvirt-guests enabled
+lightdm enabled
 loadcpufreq enabled
 lvm2 enabled
 lxc enabled
@@ -177,7 +178,6 @@ pulseaudio enabled
 qemu-kvm enabled
 rc.local enabled
 rdnssd enabled
-resolvconf enabled
 restorecond enabled
 rmnologin enabled
 rsync enabled

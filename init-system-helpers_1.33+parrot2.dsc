@@ -2,7 +2,7 @@ Format: 3.0 (native)
 Source: init-system-helpers
 Binary: init-system-helpers, dh-systemd, init
 Architecture: any all
-Version: 1.33+parrot0
+Version: 1.33+parrot2
 Maintainer: Debian systemd Maintainers <pkg-systemd-maintainers@lists.alioth.debian.org>
 Uploaders: Michael Biebl <biebl@debian.org>, Martin Pitt <mpitt@debian.org>,
 Standards-Version: 3.9.8
@@ -15,8 +15,8 @@ Package-List:
  init deb metapackages required arch=any essential=yes
  init-system-helpers deb admin required arch=all
 Checksums-Sha1:
- bf1677a12d5ae79753ea9ebc79439ed2965d9eae 58840 init-system-helpers_1.33+parrot0.tar.xz
+ bacd7240c75988a5dc8782c4c78aaef68c2c0fce 58668 init-system-helpers_1.33+parrot2.tar.xz
 Checksums-Sha256:
- e54d3549230f721acf79230d08e67428faa15e38495ce2ab634a0fb90de35eb2 58840 init-system-helpers_1.33+parrot0.tar.xz
+ 7e67e3bfbc90ab31a08b8bcbe67c1fbbc49da31436a2432305e92d23bf7aec97 58668 init-system-helpers_1.33+parrot2.tar.xz
 Files:
- e09f10e4dd0eb8ea0e7c9bbfc82d405c 58840 init-system-helpers_1.33+parrot0.tar.xz
+ 84dd97fcfd711fcbee2c4be48f18db83 58668 init-system-helpers_1.33+parrot2.tar.xz
