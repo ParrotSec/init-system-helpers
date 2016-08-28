@@ -1,0 +1,36 @@
+Format: 1.8
+Date: Sun, 28 Aug 2016 16:34:39 +0200
+Source: init-system-helpers
+Binary: init-system-helpers dh-systemd init
+Architecture: source all armhf
+Version: 1.42+parrot0
+Distribution: testing
+Urgency: medium
+Maintainer: Debian systemd Maintainers <pkg-systemd-maintainers@lists.alioth.debian.org>
+Changed-By: Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>
+Description:
+ dh-systemd - debhelper add-on to handle systemd unit files
+ init       - init metapackage
+ init-system-helpers - helper tools for all init systems
+Changes:
+ init-system-helpers (1.42+parrot0) testing; urgency=medium
+ .
+   * Minor fixes
+Checksums-Sha1:
+ 2acbc5c1047dc1ba0b0a126f35bbcb14959e9cae 1076 init-system-helpers_1.42+parrot0.dsc
+ bcf1624c65072ea57da745f00bb77e6012838bc7 58916 init-system-helpers_1.42+parrot0.tar.xz
+ 4fdb15bdcee910bd84507de048987dd77f71e152 21696 dh-systemd_1.42+parrot0_all.deb
+ ed4823b367bd4a74e0d3571ff3e18475decc9bf2 36854 init-system-helpers_1.42+parrot0_all.deb
+ 85e4160c3fb9eb7220cfdf74778462d7ccd49769 7988 init_1.42+parrot0_armhf.deb
+Checksums-Sha256:
+ e21b4da25530c15026280e5af7eddffb29f450f92a99f44498f3cfe12912ed2f 1076 init-system-helpers_1.42+parrot0.dsc
+ 64c0853b3ff0a8e53822af10292249eee5e8a87686a1cf4bd86d83435d7d030f 58916 init-system-helpers_1.42+parrot0.tar.xz
+ 6afd9094ceb260ade59b0f40845f25b9ffd34312da73da99b648d3d64fcb377b 21696 dh-systemd_1.42+parrot0_all.deb
+ b17387c6be7bd6e29dfdaf026d4e1c5069c604c8d0bc56269bae4da47cbba9a4 36854 init-system-helpers_1.42+parrot0_all.deb
+ 08b3d18d9e6b85e408f2951759ea852dba44165cbdfb7f1c8e518b33f3e42e87 7988 init_1.42+parrot0_armhf.deb
+Files:
+ 20cb3e6d896b8298c53aa513d0e0de78 1076 admin extra init-system-helpers_1.42+parrot0.dsc
+ 21d1f34ae070afd506f9b06a68821e1c 58916 admin extra init-system-helpers_1.42+parrot0.tar.xz
+ ada82be4dae441304b5d04aa143ef68e 21696 admin extra dh-systemd_1.42+parrot0_all.deb
+ 182146da48f7055a29c6ea5045282d61 36854 admin required init-system-helpers_1.42+parrot0_all.deb
+ 54cc6a363157d2b89138530b16d4de21 7988 metapackages required init_1.42+parrot0_armhf.deb

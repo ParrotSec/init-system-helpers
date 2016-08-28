@@ -1,3 +1,9 @@
+init-system-helpers (1.42+parrot0) testing; urgency=medium
+
+  * Minor fixes
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sun, 28 Aug 2016 16:34:39 +0200
+
 init-system-helpers (1.33+parrot3) testing; urgency=medium
 
   * Force live-config to be automatically enabled
