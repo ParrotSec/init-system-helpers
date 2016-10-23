@@ -189,7 +189,7 @@ then
    # the synchronous wait plus systemd's normal behaviour of
    # transactionally processing all dependencies first easily
    # causes dependency loops
-   if ! OUT=$(systemctl is-system-running 2>/dev/null) && [ "$OUT" != "degraded" ]; then
+   if ! systemctl --quiet is-active multi-user.target; then
        sctl_args="--job-mode=ignore-dependencies"
    fi
 

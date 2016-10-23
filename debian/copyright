@@ -4,11 +4,6 @@ Files: *
 Copyright: 2013 Michael Stapelberg
 License: BSD-3-clause
 
-Files: systemd2init
-Copyright: 2014 Ondřej Surý <ondrej@sury.org>
-           2014 Lukáš Zapletal <lzap+git@redhat.com>
-License: GPL-3+
-
 Files: debian/*
 Copyright: 2013 Michael Stapelberg <stapelberg@debian.org>
 License: BSD-3-clause

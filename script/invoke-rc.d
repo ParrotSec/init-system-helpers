@@ -295,7 +295,7 @@ elif test ! -f "${INITDPREFIX}${INITSCRIPTID}" ; then
 fi
 
 ## Queries sysvinit for the current runlevel
-if ! RL=`${RUNLEVELHELPER}`; then
+if [ ! -x ${RUNLEVELHELPER} ] || ! RL=`${RUNLEVELHELPER}`; then
     if [ -n "$is_systemd" ] && systemctl is-active --quiet sysinit.target; then
         # under systemd, the [2345] runlevels are only set upon reaching them;
         # if we are past sysinit.target (roughly equivalent to rcS), consider
@@ -360,16 +360,6 @@ verifyrclink () {
   return 0
 }
 
-# we do handle multiple links per runlevel
-# but we don't handle embedded blanks in link names :-(
-if test x${RL} != x ; then
-    SLINK=`ls -d -Q ${RCDPREFIX}${RL}.d/S[0-9][0-9]${INITSCRIPTID} 2>/dev/null | xargs`
-    KLINK=`ls -d -Q ${RCDPREFIX}${RL}.d/K[0-9][0-9]${INITSCRIPTID} 2>/dev/null | xargs`
-    SSLINK=`ls -d -Q ${RCDPREFIX}S.d/S[0-9][0-9]${INITSCRIPTID} 2>/dev/null | xargs`
-
-    verifyrclink ${SLINK} ${KLINK} ${SSLINK}
-fi
-
 testexec () {
   #
   # returns true if any of the parameters is
@@ -387,23 +377,50 @@ testexec () {
 RC=
 
 ###
-### LOCAL INITSCRIPT POLICY: Enforce need of a start entry
-### in either runlevel S or current runlevel to allow start
-### or restart.
-###
-case ${ACTION} in
-  start|restart)
-    if testexec ${SLINK} ; then
-	RC=104
-    elif testexec ${KLINK} ; then
-	RC=101
-    elif testexec ${SSLINK} ; then
-	RC=104
-    else
-        RC=101
+### LOCAL POLICY: Enforce that the script/unit is enabled. For SysV init
+### scripts, this needs a start entry in either runlevel S or current runlevel
+### to allow start or restart.
+if [ -n "$is_systemd" ]; then
+    case ${ACTION} in
+        start|restart)
+            # Note that systemd 215 does not yet support is-enabled for SysV scripts,
+            # this works only with systemd >= 220-1 (systemd-sysv-install). Add a
+            # simple fallback check which can be dropped after releasing stretch.
+            if systemctl --quiet is-enabled "${UNIT}" 2>/dev/null || \
+               ls ${RCDPREFIX}[S2345].d/S[0-9][0-9]${INITSCRIPTID} >/dev/null 2>&1; then
+                RC=104
+            elif systemctl --quiet is-active "${UNIT}" 2>/dev/null; then
+                RC=104
+            else
+                RC=101
+            fi
+            ;;
+    esac
+else
+    # we do handle multiple links per runlevel
+    # but we don't handle embedded blanks in link names :-(
+    if test x${RL} != x ; then
+	SLINK=`ls -d -Q ${RCDPREFIX}${RL}.d/S[0-9][0-9]${INITSCRIPTID} 2>/dev/null | xargs`
+	KLINK=`ls -d -Q ${RCDPREFIX}${RL}.d/K[0-9][0-9]${INITSCRIPTID} 2>/dev/null | xargs`
+	SSLINK=`ls -d -Q ${RCDPREFIX}S.d/S[0-9][0-9]${INITSCRIPTID} 2>/dev/null | xargs`
+
+	verifyrclink ${SLINK} ${KLINK} ${SSLINK}
     fi
-  ;;
-esac
+
+    case ${ACTION} in
+      start|restart)
+	if testexec ${SLINK} ; then
+	    RC=104
+	elif testexec ${KLINK} ; then
+	    RC=101
+	elif testexec ${SSLINK} ; then
+	    RC=104
+	else
+	    RC=101
+	fi
+      ;;
+    esac
+fi
 
 # test if /etc/init.d/initscript is actually executable
 _executable=
@@ -465,13 +482,10 @@ if [ -n "$is_upstart" ]; then
     RUNNING=
     DISABLED=
     if status "$INITSCRIPTID" 2>/dev/null | grep -q ' start/'; then
-	RUNNING=1
+        RUNNING=1
     fi
-    UPSTART_VERSION_RUNNING=$(initctl version|awk '{print $3}'|tr -d ')')
-
-    if dpkg --compare-versions "$UPSTART_VERSION_RUNNING" ge 0.9.7
-    then
-	initctl show-config -e "$INITSCRIPTID"|grep -q '^  start on' || DISABLED=1
+    if ! initctl show-config -e "$INITSCRIPTID" | grep -q '^  start on'; then
+        DISABLED=1
     fi
 fi
 
@@ -541,29 +555,12 @@ if test x${FORCE} != x || test ${RC} -eq 104 ; then
                 # the synchronous wait plus systemd's normal behaviour of
                 # transactionally processing all dependencies first easily
                 # causes dependency loops
-                if ! OUT=$(systemctl is-system-running 2>/dev/null) && [ "$OUT" != "degraded" ]; then
+                if ! systemctl --quiet is-active multi-user.target; then
                     sctl_args="--job-mode=ignore-dependencies"
                 fi
                 case $saction in
                     start|restart)
                         [ "$_state" != "LoadState=masked" ] || exit 0
-
-                        # We never start disabled jobs; we only restart them if they are
-                        # already running (got started manually).
-                        # More rationale on https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=768450
-                        # and https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=768456
-                        #
-                        # Note that due to querypolicy() in case of a disabled init script installed,
-                        # restart won't be executed.
-                        # is-enabled can fail either because the unit is disabled, or it does not exist
-                        # (e. g. it might be from a generator)
-                        if ! ERR=$(systemctl --quiet is-enabled "${UNIT}" 2>&1) && [ -z "$ERR" ]; then
-                            if [ "$saction" = "start" ]; then
-                                exit 0
-                            elif [ "$saction" = "restart" ] && ! systemctl --quiet is-active "${UNIT}" 2>/dev/null; then
-                                exit 0
-                            fi
-                        fi
                         systemctl $sctl_args "${saction}" "${UNIT}" && exit 0
                         ;;
                     stop|status)
@@ -608,6 +605,9 @@ if test x${FORCE} != x || test ${RC} -eq 104 ; then
 	    fi
 	done
 	printerror initscript ${INITSCRIPTID}, action \"${saction}\" failed.
+	if [ -n "$is_systemd" ] && [ "$saction" = start -o "$saction" = restart ]; then
+	    systemctl status --no-pager "${UNIT}" || true
+	fi
 	exit ${RC}
     fi
     exit 102

@@ -9,10 +9,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-BUILD_DATE = $(shell dpkg-parsechangelog -S Date)
 VERSION = $(shell dpkg-parsechangelog -S Version)
-POD_MAN_DATE = $(shell date -u +"%Y-%m-%d" --date="$(BUILD_DATE)")
-export POD_MAN_DATE
 
 override_dh_perl:
 	dh_perl -d --package=init-system-helpers
@@ -31,5 +28,13 @@ override_dh_install-indep:
 	cp script/parrot-update-rc.d $(SBIN)/update-rc.d
 	[ ! -d debian/init-system-helpers ] || sed -i 's/__VERSION__/$(VERSION)/' debian/init-system-helpers/usr/sbin/service
 
+
+override_dh_gencontrol:
+	if dpkg-vendor --derives-from ubuntu; then \
+		dh_gencontrol -- -Valt:sysvinit=""; \
+	else \
+		dh_gencontrol -- -Valt:sysvinit="| sysvinit-core"; \
+	fi
+
 %:
-	dh $@ 
+	dh $@

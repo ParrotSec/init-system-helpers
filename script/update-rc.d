@@ -102,6 +102,35 @@ sub systemd_reload {
     }
 }
 
+# Creates the necessary links to enable/disable a SysV init script (fallback if
+# no insserv/rc-update exists)
+sub make_sysv_links {
+    my ($scriptname, $action) = @_;
+
+    # for "remove" we cannot rely on the init script still being present, as
+    # this gets called in postrm for purging. Just remove all symlinks.
+    if ("remove" eq $action) { unlink($_) for
+        glob("/etc/rc?.d/[SK][0-9][0-9]$scriptname"); return; }
+
+    # if the service already has any links, do not touch them
+    # numbers we don't care about, but enabled/disabled state we do
+    return if glob("/etc/rc?.d/[SK][0-9][0-9]$scriptname");
+
+    # for "defaults", parse Default-{Start,Stop} and create these links
+    my ($lsb_start_ref, $lsb_stop_ref) = parse_def_start_stop("/etc/init.d/$scriptname");
+    foreach my $lvl (@$lsb_start_ref) {
+        make_path("/etc/rc$lvl.d");
+        my $l = "/etc/rc$lvl.d/S01$scriptname";
+        symlink("../init.d/$scriptname", $l);
+    }
+
+    foreach my $lvl (@$lsb_stop_ref) {
+        make_path("/etc/rc$lvl.d");
+        my $l = "/etc/rc$lvl.d/K01$scriptname";
+        symlink("../init.d/$scriptname", $l);
+    }
+}
+
 # Creates the necessary links to enable/disable the service (equivalent of an
 # initscript) in systemd.
 sub make_systemd_links {
@@ -210,10 +239,14 @@ sub insserv_updatercd {
     my $insserv = "/usr/lib/insserv/insserv";
     # Fallback for older insserv package versions [2014-04-16]
     $insserv = "/sbin/insserv" if ( -x "/sbin/insserv");
-    #print STDERR "Warning: rc.d symlinks not being kept up to date because insserv is missing!\n" if ( ! -x $insserv);
     if ("remove" eq $action) {
         system("rc-update", "-qqa", "delete", $scriptname) if ( -x "/sbin/openrc" );
-        exit 0 if ( ! -x $insserv);
+        if ( ! -x $insserv) {
+            # We are either under systemd or in a chroot where the link priorities don't matter
+            make_sysv_links($scriptname, "remove");
+            systemd_reload;
+            exit 0;
+        }
         if ( -f "/etc/init.d/$scriptname" ) {
             my $rc = system($insserv, @opts, "-r", $scriptname) >> 8;
             if (0 == $rc && !$notreally) {
@@ -235,12 +268,18 @@ sub insserv_updatercd {
         }
     } elsif ("defaults" eq $action || "start" eq $action ||
              "stop" eq $action) {
-        exit 0 if ( ! -x $insserv);
         # All start/stop/defaults arguments are discarded so emit a
         # message if arguments have been given and are in conflict
         # with Default-Start/Default-Stop values of LSB comment.
         if ("start" eq $action || "stop" eq $action) {
             cmp_args_with_defaults($scriptname, $action, @args);
+        }
+
+        if ( ! -x $insserv) {
+            # We are either under systemd or in a chroot where the link priorities don't matter
+            make_sysv_links($scriptname, "defaults");
+            systemd_reload;
+            exit 0;
         }
 
         if ( -f "/etc/init.d/$scriptname" ) {
@@ -270,9 +309,14 @@ sub insserv_updatercd {
 
         upstart_toggle($scriptname, $action);
 
-        exit 0 if ( ! -x $insserv);
+        sysv_toggle($notreally, $action, $scriptname, @args);
 
-        insserv_toggle($notreally, $action, $scriptname, @args);
+        if ( ! -x $insserv) {
+            # We are either under systemd or in a chroot where the link priorities don't matter
+            systemd_reload;
+            exit 0;
+        }
+
         # Call insserv to resequence modified links
         my $rc = system($insserv, @opts, $scriptname) >> 8;
         if (0 == $rc && !$notreally) {
@@ -380,7 +424,7 @@ sub cmp_args_with_defaults {
     }
 }
 
-sub insserv_toggle {
+sub sysv_toggle {
     my ($dryrun, $act, $name) = (shift, shift, shift);
     my (@toggle_lvls, $start_lvls, $stop_lvls, @symlinks);
     my $lsb_header = lsb_header_for_script($name);
@@ -446,5 +490,5 @@ sub is_initscripts_installed {
     # Check if mountkernfs is available. We cannot make inferences
     # using the running init system because we may be running in a
     # chroot
-    return  -f '/etc/init.d/mountkernfs.sh';
+    return  glob('/etc/rcS.d/S??mountkernfs.sh');
 }

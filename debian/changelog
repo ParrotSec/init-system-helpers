@@ -1,3 +1,53 @@
+init-system-helpers (1.45parrot0) testing; urgency=medium
+
+  * Import new version from debian
+  * Re-apply Parrot patches
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sun, 23 Oct 2016 17:56:52 +0200
+
+init-system-helpers (1.45) unstable; urgency=medium
+
+  * Revert "invoke-rc.d, service: Asynchronously reload systemd units"
+    This caused fallout at least in the autopkgtests of two packages, possibly many
+    more, thus could also break assumptions in more important environments, and was
+    just a defensive move, not a bug fix.
+    This reverts commit 9cfb6dfed4a38b7c3d8b7fd04a7681690049e424.
+
+ -- Martin Pitt <mpitt@debian.org>  Tue, 20 Sep 2016 16:27:43 +0200
+
+init-system-helpers (1.44) unstable; urgency=medium
+
+  * invoke-rc.d, service: Check for multi-user.target instead of
+    graphical.target.  There is a curious bug which sometimes causes
+    "systemctl is-active default.target" to say inactive until "show" or
+    "status" gets called on the unit. This needs to be investigated.  Until
+    then, check for multi-user.target which by and large does the same job,
+    but seems to work reliably.
+
+ -- Martin Pitt <mpitt@debian.org>  Mon, 12 Sep 2016 22:52:23 +0200
+
+init-system-helpers (1.43) unstable; urgency=medium
+
+  [ Felipe Sateler ]
+  * Add /etc/rc?.d to the dirs shipped by init-system-helpers.
+    (Closes: #834524)
+
+  [ Martin Pitt ]
+  * invoke-rc.d, service: Only ignore systemd unit dependencies before
+    default.target. "systemctl is-system-running" might still be false in case
+    of running jobs for device/mount/hotplug/dynamic actions units. But in
+    those cases we already do want to respect unit dependencies, as the system
+    is booted up sufficiently to avoid dependency loops. Fixes installation of
+    packages like PostgreSQL under cloud-init or when manually installing
+    packages right after booting. (LP: #1576692)
+  * invoke-rc.d, service: Asynchronously reload systemd units.
+    Reloading SysV init scripts has never been synchronous, so use --no-block
+    to reload them under systemd. This is another, and a better, line of
+    defence against if-up.d hook deadlocks during boot (see
+    https://bugs.debian.org/777113).
+
+ -- Martin Pitt <mpitt@debian.org>  Mon, 12 Sep 2016 09:35:28 +0200
+
 init-system-helpers (1.42+parrot0) testing; urgency=medium
 
   * Minor fixes

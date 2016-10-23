@@ -64,14 +64,14 @@ if (-x $policyhelper) {
     for my $unit (@units) {
         system(qq|$policyhelper $unit "$action"|);
 
-        # 104 means run
+        # 0 or 104 means run
         # 101 means do not run
         my $exitcode = ($? >> 8);
         if ($exitcode == 101) {
             print STDERR "$policyhelper returned 101, not running '" . join(' ', @ARGV) . "'\n";
             exit 0;
-        } elsif ($exitcode != 104) {
-            print STDERR "deb-systemd-invoke only supports $policyhelper return code 101 and 104!\n";
+        } elsif ($exitcode != 104 && $exitcode != 0) {
+            print STDERR "deb-systemd-invoke only supports $policyhelper return codes 0, 101, and 104!\n";
             print STDERR "Got return code $exitcode, ignoring.\n";
         }
     }
