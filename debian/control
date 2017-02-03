@@ -40,15 +40,6 @@ Description: helper tools for all init systems
  specific to systemd at all. Maintainers of other init systems are welcome to
  include their helpers in this package.
 
-Package: dh-systemd
-Section: oldlibs
-Architecture: all
-Multi-Arch: foreign
-Depends: debhelper (>= 9.20160709),
-         ${misc:Depends},
-Description: debhelper add-on to handle systemd unit files - transitional package
- This package is for transitional purposes and can be removed safely.
-
 Package: init
 Section: metapackages
 Architecture: any
@@ -56,9 +47,9 @@ Priority: important
 XB-Important: yes
 Multi-Arch: foreign
 Pre-Depends: systemd-sysv [linux-any] ${alt:sysvinit},
-Depends: init-system-helpers,
+Depends: init-system-helpers (>= 1.25),
          ${misc:Depends},
-Description: init metapackage
+Description: metapackage ensuring an init system is installed
  This package is a metapackage which allows you to select from the available
  init systems while ensuring that one of these is available on the system at
  all times.

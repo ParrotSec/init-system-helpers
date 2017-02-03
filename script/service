@@ -194,7 +194,7 @@ then
    fi
 
    case "${ACTION}" in
-      restart|status)
+      restart|status|try-restart)
          exec systemctl $sctl_args ${ACTION} ${UNIT}
       ;;
       start|stop)

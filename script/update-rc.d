@@ -337,10 +337,10 @@ sub parse_def_start_stop {
     open my $fh, '<', $script or error("unable to read $script");
     while (<$fh>) {
         chomp;
-        if (m/^### BEGIN INIT INFO$/) {
+        if (m/^### BEGIN INIT INFO\s*$/) {
             $lsb{'begin'}++;
         }
-        elsif (m/^### END INIT INFO$/) {
+        elsif (m/^### END INIT INFO\s*$/) {
             $lsb{'end'}++;
             last;
         }

@@ -1,3 +1,55 @@
+init-system-helpers (1.47+parrot0) testing; urgency=medium
+
+  * Import new Debian release
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Fri, 03 Feb 2017 02:59:27 +0100
+
+init-system-helpers (1.47) unstable; urgency=medium
+
+  [ Christian Hofstaedtler ]
+  * Align policy-rc.d existing/nonexisting case for custom actions.
+    Previously, when calling invoke-rc.d with a "custom" action, it
+    would print an error when a policy-rc.d file was installed, but
+    it would be silent if no such file was installed. (Closes: #728682)
+
+  [ Andreas Henriksson ]
+  * Do policy-rc.d automatically in init-less chroots.
+    See #838966 and #838997 for background.
+    A debootstrap with --variant=minbase will have lsb-base installed,
+    so the person running into this issue must have:
+     - not added a policy-rc.d in his init-less chroot
+     - removed lsb-base manually (and what else?)
+    This patch auto-detects the situation with init-less chroot that's
+    missing a policy-rc.d and deals with it automatically (plus gives
+    a warning message). (Closes: #843761)
+
+  [ Ondřej Nový ]
+  * Add try-restart action.
+    See #851688
+
+  [ Felipe Sateler ]
+  * Make init depend on a new enough init-system-helpers.
+    In jessie, update-rc.d/invoke-rc.d/service are shipped by sysv-rc.
+    They got moved to init-system-helpers after that, so make sure we
+    have the new versions to ensure the scripts are available.
+    This dependency can probably be dropped after stretch is released.
+  * update-rc.d: allow trailing whitespace in LSB header delimiters.
+    It is a hard to diagnose condition because trailing spaces are
+    invisible in most editors. Moreover, all the other parsers (systemd,
+    insserv) allow such trailing space. (Closes: #851730)
+
+ -- Felipe Sateler <fsateler@debian.org>  Wed, 18 Jan 2017 10:17:07 -0300
+
+ init-system-helpers (1.46) unstable; urgency=medium
+
+  * Drop dh-systemd transitional package.
+    It is now provided by debhelper (Closes: #841914)
+  * Add a meaningful short description to init metapackage
+  * Document copyright of things lifted from pkg:sysvinit (Closes: #839545)
+  * Use https url for copyright format
+
+ -- Felipe Sateler <fsateler@debian.org>  Sun, 06 Nov 2016 17:02:00 -0300
+
 init-system-helpers (1.45parrot0) testing; urgency=medium
 
   * Import new version from debian
@@ -65,7 +117,7 @@ init-system-helpers (1.33+parrot2) testing; urgency=medium
   * Add Parrot blacklist
   * Add Parrot whitelist
   * Add some jokes
-  * Modify the code to make network services automatically disabled 
+  * Modify the code to make network services automatically disabled
 
  -- Lorenzo "Palinuro" Faletra <eclipse@parrotsec.org>  Wed, 15 Jun 2016 17:08:56 +0200
 

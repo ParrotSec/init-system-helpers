@@ -36,7 +36,7 @@ invoke-rc.d [options] <basename> <action> [extra initscript parameters...]
 
   basename - Initscript ID, as per update-rc.d(8)
   action   - Initscript action. Known actions are:
-                start, [force-]stop, restart,
+                start, [force-]stop, [try-]restart,
                 [force-]reload, status
   (status is there because of the LSB. Debian does not use it).
 

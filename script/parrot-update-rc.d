@@ -95,6 +95,7 @@ __DATA__
 #
 apache2 disabled
 avahi-daemon disabled
+couchdb disabled
 clamav-daemon disabled
 clamav-freshclam disabled
 cups disabled
