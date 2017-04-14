@@ -1,3 +1,10 @@
+init-system-helpers (1.47+parrot1) testing; urgency=medium
+
+  * Manually add mariadb to blacklist
+  * Manually add thin to blacklist
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Fri, 14 Apr 2017 17:36:32 +0200
+
 init-system-helpers (1.47+parrot0) testing; urgency=medium
 
   * Import new Debian release

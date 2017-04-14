@@ -104,8 +104,7 @@ dhcpcd disabled
 exim4 disabled
 greenbone-security-assistant disabled
 iodined disabled
-postfix disabled
-procmail disabled
+mariadb disabled
 minissdpd disabled
 openbsd-inetd disabled
 openvas-manager disabled
@@ -113,12 +112,18 @@ openvas-scanner disabled
 polipo disabled
 postfix disabled
 postgresql disabled
+pppd-dns disabled
+procmail disabled
+redis-server disabled
 rpcbind disabled
 saned disabled
 ssh disabled
+stunnel4 disabled
 winbind disabled
+thin disabled
 tinyproxy disabled
 tor disabled
+udftools disabled
 pure-ftpd disabled
 #
 # Whitelist
