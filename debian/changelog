@@ -1,3 +1,9 @@
+init-system-helpers (1.47+parrot2) testing; urgency=medium
+
+  * Manually add dradis to blacklist.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Mon, 01 May 2017 02:59:49 +0200
+
 init-system-helpers (1.47+parrot1) testing; urgency=medium
 
   * Manually add mariadb to blacklist

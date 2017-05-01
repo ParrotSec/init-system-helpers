@@ -101,6 +101,7 @@ clamav-freshclam disabled
 cups disabled
 dictd disabled
 dhcpcd disabled
+dradis disabled
 exim4 disabled
 greenbone-security-assistant disabled
 iodined disabled
