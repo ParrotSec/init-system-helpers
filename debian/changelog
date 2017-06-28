@@ -1,3 +1,9 @@
+init-system-helpers (1.47+parrot3) testing; urgency=medium
+
+  * Add systemd blacklist preset rules.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Wed, 28 Jun 2017 02:05:14 +0200
+
 init-system-helpers (1.47+parrot2) testing; urgency=medium
 
   * Manually add dradis to blacklist.
