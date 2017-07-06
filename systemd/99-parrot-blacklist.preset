@@ -30,5 +30,6 @@ disable thin.service
 disable tinyproxy.service
 disable tor.service
 disable udftools.service
-disable pure-ftpd disabled
+disable pure-ftpd.service
 disable *
+enable resolvconf.service

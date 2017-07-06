@@ -187,6 +187,7 @@ pulseaudio enabled
 qemu-kvm enabled
 rc.local enabled
 rdnssd enabled
+resolvconf enabled
 restorecond enabled
 rmnologin enabled
 rsync enabled
