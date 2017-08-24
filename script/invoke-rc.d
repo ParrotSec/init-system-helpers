@@ -36,7 +36,6 @@ FORCE=
 RETRY=
 RETURNFAILURE=
 RC=
-is_upstart=
 is_systemd=
 is_openrc=
 
@@ -266,15 +265,7 @@ fi
 #NOTE: It may not be obvious, but "$@" from this point on must expand
 #to the extra initscript parameters, except inside functions.
 
-# Operate against system upstart, not session
-unset UPSTART_SESSION
-# If we're running on upstart and there's an upstart job of this name, do
-# the rest with upstart instead of calling the init script.
-if which initctl >/dev/null && initctl version 2>/dev/null | grep -q upstart \
-   && initctl status ${INITSCRIPTID} 1>/dev/null 2>/dev/null
-then
-    is_upstart=1
-elif test -d /run/systemd/system ; then
+if test -d /run/systemd/system ; then
     is_systemd=1
     UNIT="${INITSCRIPTID%.sh}.service"
 elif test -f /run/openrc/softlevel ; then
@@ -283,13 +274,6 @@ elif test ! -f "${INITDPREFIX}${INITSCRIPTID}" ; then
     ## Verifies if the given initscript ID is known
     ## For sysvinit, this error is critical
     printerror unknown initscript, ${INITDPREFIX}${INITSCRIPTID} not found.
-    # If the init script doesn't exist, but the upstart job does, we
-    # defer the error exit; we might be running in a chroot and
-    # policy-rc.d might say not to start the job anyway, in which case
-    # we don't want to exit non-zero.
-    if [ ! -e "/etc/init/${INITSCRIPTID}.conf" ]; then
-	exit 100
-    fi
 fi
 
 ## Queries sysvinit for the current runlevel
@@ -422,9 +406,7 @@ fi
 
 # test if /etc/init.d/initscript is actually executable
 _executable=
-if [ -n "$is_upstart" ]; then
-    _executable=1
-elif [ -n "$is_systemd" ]; then
+if [ -n "$is_systemd" ]; then
     _executable=1
 elif testexec "${INITDPREFIX}${INITSCRIPTID}"; then
     _executable=1
@@ -476,22 +458,11 @@ getnextaction () {
     ACTION="$@"
 }
 
-if [ -n "$is_upstart" ]; then
-    RUNNING=
-    DISABLED=
-    if status "$INITSCRIPTID" 2>/dev/null | grep -q ' start/'; then
-        RUNNING=1
-    fi
-    if ! initctl show-config -e "$INITSCRIPTID" | grep -q '^  start on'; then
-        DISABLED=1
-    fi
-fi
-
 ## Executes initscript
 ## note that $ACTION is a space-separated list of actions
 ## to be attempted in order until one suceeds.
 if test x${FORCE} != x || test ${RC} -eq 104 ; then
-    if [ -n "$is_upstart" ] || [ -n "$is_systemd" ] || testexec "${INITDPREFIX}${INITSCRIPTID}" ; then
+    if [ -n "$is_systemd" ] || testexec "${INITDPREFIX}${INITSCRIPTID}" ; then
 	RC=102
 	setechoactions ${ACTION}
 	while test ! -z "${ACTION}" ; do
@@ -500,46 +471,7 @@ if test x${FORCE} != x || test ${RC} -eq 104 ; then
 		printerror executing initscript action \"${saction}\"...
 	    fi
 
-	    if [ -n "$is_upstart" ]; then
-		case $saction in
-		    status)
-			"$saction" "$INITSCRIPTID" && exit 0
-			;;
-		    start|stop)
-			if [ -z "$RUNNING" ] && [ "$saction" = "stop" ]; then
-			    exit 0
-			elif [ -n "$RUNNING" ] && [ "$saction" = "start" ]; then
-			    exit 0
-			elif [ -n "$DISABLED" ] && [ "$saction" = "start" ]; then
-			    exit 0
-			fi
-			$saction "$INITSCRIPTID" && exit 0
-			;;
-		    restart)
-			if [ -n "$RUNNING" ] ; then
-			    stop "$INITSCRIPTID"
-			fi
-
-			# If the job is disabled and is not currently
-			# running, the job is not restarted. However, if
-			# the job is disabled but has been forced into
-			# the running state, we *do* stop and restart it
-			# since this is expected behaviour
-			# for the admin who forced the start.
-			if [ -n "$DISABLED" ] && [ -z "$RUNNING" ]; then
-			    exit 0
-			fi
-			start "$INITSCRIPTID" && exit 0
-			;;
-		    reload|force-reload)
-			reload "$INITSCRIPTID" && exit 0
-			;;
-		    *)
-			# This will almost certainly fail, but give it a try
-			initctl "$saction" "$INITSCRIPTID" && exit 0
-			;;
-		esac
-            elif [ -n "$is_systemd" ]; then
+            if [ -n "$is_systemd" ]; then
                 if [ -n "$DPKG_MAINTSCRIPT_PACKAGE" ]; then
                     # If we are called by a maintainer script, chances are good that a
                     # new or updated sysv init script was installed.  Reload daemon to
@@ -604,7 +536,7 @@ if test x${FORCE} != x || test ${RC} -eq 104 ; then
 	done
 	printerror initscript ${INITSCRIPTID}, action \"${saction}\" failed.
 	if [ -n "$is_systemd" ] && [ "$saction" = start -o "$saction" = restart -o "$saction" = "try-restart" ]; then
-	    systemctl status --no-pager "${UNIT}" || true
+	    systemctl status --full --no-pager "${UNIT}" || true
 	fi
 	exit ${RC}
     fi

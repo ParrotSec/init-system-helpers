@@ -1,3 +1,42 @@
+init-system-helpers (1.49+parrot1) testing; urgency=medium
+
+  * Import new Debian release.
+  * Reinclude parrot patches.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Fri, 25 Aug 2017 00:42:03 +0200
+
+init-system-helpers (1.49) unstable; urgency=low
+
+  [ Felipe Sateler ]
+  * Upload to unstable. Urgency low due to large changeset.
+  * d-s-invoke: Execute systemctl once when starting units.
+    This ensures systemd itself can order them the best way it sees fit.
+    (Closes: #848192)
+  * update-rc.d: check that /etc/insserv.conf exists before invoking insserv.
+    It might happen that the binary exists but the configuration file doesn't,
+    and then the insserv invocation will fail. Therefore don't consider insserv
+    installed until the configuration file exists.
+    Thanks to Petter Reinholdtsen for the patch. (Closes: #849284)
+  * Bump Standards-Version
+
+  [ Iain Lane ]
+  * invoke-rc.d: Pass --full to `systemctl status', so we don't get ellipsised output.
+
+  [ Michael Biebl ]
+  * Drop support for upstart
+
+ -- Felipe Sateler <fsateler@debian.org>  Mon, 17 Jul 2017 12:27:32 -0400
+
+init-system-helpers (1.48) unstable; urgency=medium
+
+  * Team upload
+  * [fbabdc8] Handle units with escaped characters correctly.
+    See
+    https://www.freedesktop.org/software/systemd/man/systemd-escape.html
+    for details. (Closes: #861204)
+
+ -- Bernd Zeimetz <bzed@debian.org>  Tue, 02 May 2017 12:20:21 +0200
+
 init-system-helpers (1.47+parrot4) testing; urgency=medium
 
   * Enable resolvconf.

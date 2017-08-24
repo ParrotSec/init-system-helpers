@@ -32,17 +32,16 @@ service \- run a System V init script
 
 .SH DESCRIPTION
 .B service
-runs a System V init script, systemd unit, or upstart job in as predictable an
+runs a System V init script or systemd unit in as predictable an
 environment as possible, removing most environment variables and with the
 current working directory set to \fB/\fR.
 
 The
 .I SCRIPT
 parameter specifies a System V init script,
-located in \fB/etc/init.d/\fISCRIPT\fR, or the name of a systemd unit, or the
-name of an upstart job in \fB/etc/init\fR. The existence of a systemd unit or
-upstart job of the same name as a script in /etc/init.d will cause the unit/job
-to take precedence over the init.d script.
+located in \fB/etc/init.d/\fISCRIPT\fR, or the name of a systemd unit.
+The existence of a systemd unit of the same name as a script in /etc/init.d
+will cause the unit to take precedence over the init.d script.
 The supported values of
 .I COMMAND
 depend on the invoked script.
@@ -51,11 +50,9 @@ passes
 .I COMMAND
 and
 .I OPTIONS
-to the init script unmodified. For systemd units or upstart jobs, start, stop,
+to the init script unmodified. For systemd units, start, stop,
 status, and reload are passed through to their systemctl/initctl
-equivalents. For upstart jobs, restart will call the upstart 'stop' for the
-job, followed immediately by the 'start', and will exit with the return code of
-the start command.
+equivalents.
 
 All scripts should support at least the
 .B start
@@ -68,16 +65,14 @@ is \fB\-\-full-restart\fR, the script is run twice, first with the
 .B stop
 command, then with the
 .B start
-command. This option has no effect on upstart jobs.
+command.
 
 .B service \-\-status\-all
 runs all init scripts, in alphabetical order, with the
 .B status
 command.  The status is [ + ] for running services, [ - ] for stopped
 services and [ ? ] for services without a 'status' command.  This
-option only calls status for sysvinit jobs; upstart jobs can be
-queried in a similar manner with
-\fBinitctl list\fR.
+option only calls status for sysvinit jobs.
 
 .SH EXIT CODES
 .BR service
@@ -87,9 +82,6 @@ calls the init script and returns the status returned by it.
 .TP
 \fB/etc/init.d\fR
 The directory containing System V init scripts.
-.TP
-\fB/etc/init\fR
-The directory containing upstart jobs.
 .TP
 \fB/{lib,run,etc}/systemd/system\fR
 The directories containing systemd units.
@@ -109,5 +101,3 @@ The only environment variables passed to the init scripts.
 .BR invoke\-rc.d (8).
 .br
 .BR systemctl (1).
-.br
-.BR initctl (8).

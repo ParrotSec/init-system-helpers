@@ -54,7 +54,7 @@ unless ($ENV{'TEST_ON_REAL_SYSTEM'}) {
 # ┃ Verify “is-enabled” is not true for a random, non-existing unit file.     ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-my ($fh, $random_unit) = tempfile('unitXXXXX',
+my ($fh, $random_unit) = tempfile('unit\x2dXXXXX',
     SUFFIX => '.service',
     TMPDIR => 1,
     UNLINK => 1);
@@ -303,13 +303,13 @@ ExecStart=/bin/sleep 1
 
 [Install]
 WantedBy=multi-user.target
-Alias=footest.service
+Alias=foo\x2dtest.service
 EOT
 close($fh);
 
 isnt_enabled($random_unit);
-isnt_enabled('footest.service');
-my $alias_path = "/etc/systemd/system/footest.service";
+isnt_enabled('foo\x2dtest.service');
+my $alias_path = "/etc/systemd/system/foo\x2dtest.service";
 ok(! -l $alias_path, 'alias link does not exist yet');
 $retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh enable $random_unit");
 is($retval, 0, "enable command succeeded");
@@ -376,7 +376,7 @@ EOT
 close($fh);
 
 isnt_enabled($random_unit);
-isnt_enabled('footest.service');
+isnt_enabled('foo\x2dtest.service');
 # note that in this case $alias_path and $mask_path are identical
 $retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh enable $random_unit");
 is($retval, 0, "enable command succeeded");

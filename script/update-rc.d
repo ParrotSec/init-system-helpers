@@ -166,50 +166,6 @@ sub make_systemd_links {
     }
 }
 
-# Manage the .override file for upstart jobs, so update-rc.d enable/disable
-# work on upstart systems the same as on sysvinit/systemd.
-sub upstart_toggle {
-    my ($scriptname, $action) = @_;
-
-    # This needs to be done by manually parsing .override files instead of
-    # using initctl, because upstart might not be installed yet.
-    my $service_path;
-    if (-f "/etc/init/$scriptname.conf") {
-        $service_path = "/etc/init/$scriptname.override";
-    }
-    if (!defined($service_path)) {
-        return;
-    }
-    my $fh;
-    my $enabled = 1;
-    my $overrides = '';
-    if (open $fh, '<', $service_path) {
-        while (<$fh>) {
-           if (/^\s*manual\s*$/) {
-               $enabled = 0;
-           } else {
-               $overrides .= $_;
-           }
-        }
-    }
-    close($fh);
-
-    if ($enabled && $action eq 'disable') {
-        open $fh, '>>', $service_path or error("unable to write $service_path");
-        print $fh "manual\n";
-        close($fh);
-    } elsif (!$enabled && $action eq 'enable') {
-        if ($overrides ne '') {
-            open $fh, '>', $service_path . '.new' or error ("unable to write $service_path");
-            print $fh $overrides;
-            close($fh);
-            rename($service_path . '.new', $service_path) or error($!);
-        } else {
-            unlink($service_path) or error($!);
-        }
-    }
-}
-
 ## Dependency based
 sub insserv_updatercd {
     my @args = @_;
@@ -239,9 +195,11 @@ sub insserv_updatercd {
     my $insserv = "/usr/lib/insserv/insserv";
     # Fallback for older insserv package versions [2014-04-16]
     $insserv = "/sbin/insserv" if ( -x "/sbin/insserv");
+    # If insserv is not configured it is not fully installed
+    my $insserv_installed = -x $insserv && -e "/etc/insserv.conf";
     if ("remove" eq $action) {
         system("rc-update", "-qqa", "delete", $scriptname) if ( -x "/sbin/openrc" );
-        if ( ! -x $insserv) {
+        if ( !$insserv_installed ) {
             # We are either under systemd or in a chroot where the link priorities don't matter
             make_sysv_links($scriptname, "remove");
             systemd_reload;
@@ -275,7 +233,7 @@ sub insserv_updatercd {
             cmp_args_with_defaults($scriptname, $action, @args);
         }
 
-        if ( ! -x $insserv) {
+        if ( !$insserv_installed ) {
             # We are either under systemd or in a chroot where the link priorities don't matter
             make_sysv_links($scriptname, "defaults");
             systemd_reload;
@@ -307,11 +265,9 @@ sub insserv_updatercd {
     } elsif ("disable" eq $action || "enable" eq $action) {
         make_systemd_links($scriptname, $action);
 
-        upstart_toggle($scriptname, $action);
-
         sysv_toggle($notreally, $action, $scriptname, @args);
 
-        if ( ! -x $insserv) {
+        if ( !$insserv_installed ) {
             # We are either under systemd or in a chroot where the link priorities don't matter
             systemd_reload;
             exit 0;

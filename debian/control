@@ -1,11 +1,13 @@
 Source: init-system-helpers
 Section: admin
 Priority: extra
-Maintainer: Parrot Devel Team <parrot-devel@lists.parrotsec.org>
-Uploaders: Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>
+Maintainer: Debian systemd Maintainers <pkg-systemd-maintainers@lists.alioth.debian.org>
+Uploaders: Michael Biebl <biebl@debian.org>,
+           Martin Pitt <mpitt@debian.org>,
+           Felipe Sateler <fsateler@debian.org>
 Build-Depends: debhelper (>= 9),
                perl:any,
-Standards-Version: 3.9.8
+Standards-Version: 4.0.0
 Vcs-Git: https://anonscm.debian.org/git/collab-maint/init-system-helpers.git
 Vcs-Browser: https://anonscm.debian.org/git/collab-maint/init-system-helpers.git
 
