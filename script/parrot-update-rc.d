@@ -95,6 +95,7 @@ __DATA__
 #
 apache2 disabled
 avahi-daemon disabled
+bluetooth disabled
 couchdb disabled
 clamav-daemon disabled
 clamav-freshclam disabled
@@ -107,6 +108,7 @@ greenbone-security-assistant disabled
 iodined disabled
 mariadb disabled
 minissdpd disabled
+nfs-common disabled
 openbsd-inetd disabled
 openvas-manager disabled
 openvas-scanner disabled
@@ -137,7 +139,6 @@ anacron enabled
 atd enabled
 atop enabled
 binfmt-support enabled
-bluetooth enabled
 bootlogs enabled
 bootmisc.sh enabled
 checkfs.sh enabled

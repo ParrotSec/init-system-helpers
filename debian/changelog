@@ -1,3 +1,48 @@
+init-system-helpers (1.51+parrot0) testing; urgency=medium
+
+  * Import new Debian version.
+  * Update parrot patches.
+  * Blacklist bluetooth autostart.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sun, 18 Mar 2018 20:31:45 +0100
+
+init-system-helpers (1.51) unstable; urgency=high
+
+  [ Michael Biebl ]
+  * Drop obsolete debian/init-system-helpers.postinst
+  * Drop man page translations for update-rc.d.
+    Those are outdated and not installed anyway.
+
+  [ Felipe Sateler ]
+  * Fix errors in pod2man invocations.
+    Catch errors when building pod manpages, and stop trying to build documentation for the debhelper tools
+  * Convert manpages into reStructuredText
+  * update-rc.d: fix typo that was disabling all sysv scripts in defaults mode
+    (Closes: #879771).
+
+ -- Felipe Sateler <fsateler@debian.org>  Wed, 25 Oct 2017 12:38:42 -0300
+
+init-system-helpers (1.50) unstable; urgency=medium
+
+  [ Steve Langasek ]
+  * autopkgtests: Correctly handle unit names that can contain escape sequences.
+    They need to be quoted so that the shell does not parse them.
+    (Closes: #873789)
+
+  [ Felipe Sateler ]
+  * Refactor internals of update-rc.d
+    - Refactor actions into a sequence of steps according to the installed
+      init systems. This makes plugging new init systems or new actions
+      easier.
+  * Add vim modelines for file type
+  * update-rc.d: remove -n (dryrun) option, as it did not work.
+    Given that nobody complained, lets just remove it. (Closes: #856415)
+  * update-rc.d: Add a defaults-disabled action.
+    It allows installing a service but disabled. (Closes: #857452)
+  * Briefly document defaults-disabled
+
+ -- Felipe Sateler <fsateler@debian.org>  Thu, 12 Oct 2017 20:16:13 -0300
+
 init-system-helpers (1.49+parrot1) testing; urgency=medium
 
   * Import new Debian release.
