@@ -109,6 +109,8 @@ iodined disabled
 mariadb disabled
 minissdpd disabled
 nfs-common disabled
+nginx disabled
+nmbd disabled
 openbsd-inetd disabled
 openvas-manager disabled
 openvas-scanner disabled
@@ -118,7 +120,10 @@ postgresql disabled
 pppd-dns disabled
 procmail disabled
 redis-server disabled
+redsocks disabled
 rpcbind disabled
+samba disabled
+smbd disabled
 saned disabled
 ssh disabled
 stunnel4 disabled
