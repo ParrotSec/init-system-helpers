@@ -1,5 +1,4 @@
 Tests: t
 Depends: @,
-  cpanminus,
   build-essential
 Restrictions: needs-root, breaks-testbed, allow-stderr, isolation-container

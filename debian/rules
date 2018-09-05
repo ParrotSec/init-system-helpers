@@ -9,7 +9,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-VERSION = $(shell dpkg-parsechangelog -S Version)
+include /usr/share/dpkg/pkg-info.mk
 
 override_dh_perl:
 	dh_perl -d --package=init-system-helpers
@@ -19,7 +19,7 @@ override_dh_auto_build:
 	dh_auto_build
 	set -e ; \
 	for file in script/deb-*; do \
-		pod2man --section=1p --utf8 $$file $$file.1p; \
+		pod2man --section=1p --utf8 --center="init-system-helpers" --release=$(DEB_VERSION) $$file $$file.1p; \
 	done
 	set -e ; \
 	for file in man8/*.rst ; do \
@@ -31,7 +31,7 @@ override_dh_install-indep:
 	dh_install
 	mv $(SBIN)/update-rc.d $(SBIN)/debian-update-rc.d
 	cp script/parrot-update-rc.d $(SBIN)/update-rc.d
-	[ ! -d debian/init-system-helpers ] || sed -i 's/__VERSION__/$(VERSION)/' debian/init-system-helpers/usr/sbin/service
+	[ ! -d debian/init-system-helpers ] || sed -i 's/__VERSION__/$(DEB_VERSION)/' debian/init-system-helpers/usr/sbin/service
 
 
 override_dh_gencontrol:

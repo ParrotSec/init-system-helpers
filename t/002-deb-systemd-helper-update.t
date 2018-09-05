@@ -8,57 +8,11 @@ use File::Temp qw(tempfile tempdir); # in core since perl 5.6.1
 use File::Path qw(make_path); # in core since Perl 5.001
 use File::Basename; # in core since Perl 5
 use FindBin; # in core since Perl 5.00307
-use Linux::Clone; # neither in core nor in Debian :-/
 
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃ SETUP: in a new mount namespace, bindmount tmpdirs on /etc/systemd and    ┃
-# ┃ /var/lib/systemd to start with clean directories yet use the actual       ┃
-# ┃ locations and code paths.                                                 ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+use lib "$FindBin::Bin/.";
+use helpers;
 
-my $dsh = "$FindBin::Bin/../script/deb-systemd-helper";
-
-# reads in a whole file
-sub slurp {
-    open my $fh, '<', shift;
-    local $/;
-    <$fh>;
-}
-
-sub state_file_entries {
-    my ($path) = @_;
-    my $bytes = slurp($path);
-    return split("\n", $bytes);
-}
-
-sub _unit_enabled {
-    my ($unit_file, $cb, $verb) = @_;
-
-    my $retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh is-enabled $unit_file");
-    isnt($retval, -1, 'deb-systemd-helper could be executed');
-    ok(!($retval & 127), 'deb-systemd-helper did not exit due to a signal');
-    $cb->($retval >> 8, 0, "random unit file $verb enabled");
-}
-
-sub is_enabled { _unit_enabled($_[0], \&is, 'is') }
-sub isnt_enabled { _unit_enabled($_[0], \&isnt, 'isnt') }
-
-my $retval = Linux::Clone::unshare Linux::Clone::NEWNS;
-BAIL_OUT("Cannot unshare(NEWNS): $!") if $retval != 0;
-
-sub bind_mount_tmp {
-    my ($dir) = @_;
-    my $tmp = tempdir(CLEANUP => 1);
-    system("mount -n --bind $tmp $dir") == 0
-        or BAIL_OUT("bind-mounting $tmp to $dir failed: $!");
-    return $tmp;
-}
-
-unless ($ENV{'TEST_ON_REAL_SYSTEM'}) {
-    my $etc_systemd = bind_mount_tmp('/etc/systemd');
-    my $lib_systemd = bind_mount_tmp('/lib/systemd');
-    my $var_lib_systemd = bind_mount_tmp('/var/lib/systemd');
-}
+test_setup();
 
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃ Verify “is-enabled” is not true for a random, non-existing unit file.     ┃
@@ -91,7 +45,7 @@ close($fh);
 # ┃ Verify “enable” creates the requested symlinks.                           ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-$retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh enable $random_unit");
+my $retval = dsh('enable', $random_unit);
 my $symlink_path = "/etc/systemd/system/multi-user.target.wants/$random_unit";
 ok(-l $symlink_path, "$random_unit was enabled");
 is(readlink($symlink_path), $servicefile_path,
@@ -117,7 +71,7 @@ isnt_enabled($random_unit);
 # ┃ Verify “was-enabled” is still true (operates on the state file).          ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-$retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh was-enabled $random_unit");
+$retval = dsh('was-enabled', $random_unit);
 isnt($retval, -1, 'deb-systemd-helper could be executed');
 ok(!($retval & 127), 'deb-systemd-helper did not exit due to a signal');
 is($retval >> 8, 0, "random unit file was-enabled");
@@ -138,7 +92,7 @@ is_deeply(
 my $new_symlink_path = '/etc/systemd/system/newalias.service';
 ok(! -l $new_symlink_path, 'new symlink does not exist yet');
 
-$retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh enable $random_unit");
+$retval = dsh('enable', $random_unit);
 ok(-l $new_symlink_path, 'new symlink was created');
 is(readlink($new_symlink_path), $servicefile_path,
     "symlink points to $servicefile_path");
@@ -168,7 +122,7 @@ isnt_enabled($random_unit);
 # ┃ Verify “was-enabled” is still true (operates on the state file).          ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-$retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh was-enabled $random_unit");
+$retval = dsh('was-enabled', $random_unit);
 isnt($retval, -1, 'deb-systemd-helper could be executed');
 ok(!($retval & 127), 'deb-systemd-helper did not exit due to a signal');
 is($retval >> 8, 0, "random unit file was-enabled");
@@ -190,7 +144,7 @@ is_deeply(
 my $new_symlink_path2 = '/etc/systemd/system/another.service';
 ok(! -l $new_symlink_path2, 'new symlink does not exist yet');
 
-$retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh update-state $random_unit");
+$retval = dsh('update-state', $random_unit);
 ok(! -l $new_symlink_path2, 'new symlink still does not exist');
 
 isnt_enabled($random_unit);
@@ -223,7 +177,7 @@ unlink($new_symlink_path);
 ok(! -l $new_symlink_path, 'new symlink still does not exist');
 ok(! -l $new_symlink_path2, 'new symlink 2 still does not exist');
 
-$retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh update-state $random_unit");
+$retval = dsh('update-state', $random_unit);
 
 ok(! -l $new_symlink_path, 'new symlink still does not exist');
 ok(! -l $new_symlink_path2, 'new symlink 2 still does not exist');

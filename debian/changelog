@@ -1,3 +1,80 @@
+init-system-helpers (1.54+parrot1) testing; urgency=medium
+
+  * Import new Debian release.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Wed, 05 Sep 2018 14:35:17 +0200
+
+init-system-helpers (1.54) unstable; urgency=medium
+
+  * Revert "Drop fallback for old versions of systemd that didn't have
+    is-enabled"
+    If a package ships both init script and systemd service file, the
+    systemd unit will not be enabled by the time invoke-rc.d is called
+    (with current debhelper sequence). This would make systemctl is-enabled
+    report the wrong status, and then the service would not be started.
+    Add a comment noting this to avoid removing again in the future.
+    This reverts commit 6f95680ffc9b1605841eb7d3d8eb92c790e6c73a.
+    (Closes: #906421, #906051)
+
+ -- Felipe Sateler <fsateler@debian.org>  Fri, 17 Aug 2018 10:33:08 -0300
+
+init-system-helpers (1.53) unstable; urgency=medium
+
+  * tests: only load Linux::Clone if not testing on real system
+    'use' directive is evaluated at compile time, so having it inside an 'if'
+    statement does not have the expected effect. Use the 'use if' directive instead.
+    This fixes running the autopkgtests in clean systems without Linux::Clone module
+
+ -- Felipe Sateler <fsateler@debian.org>  Wed, 15 Aug 2018 23:52:53 -0300
+
+init-system-helpers (1.52) unstable; urgency=medium
+
+  [ Felipe Sateler ]
+  * Change Vcs-* urls to point to the new salsa service
+  * Drop fallback for old versions of systemd that didn't have is-enabled.
+    This reverts commit 0e43de3196a68e59d8a543d1cf7f5b4bfbb27451
+  * invoke-rc.d: add option to do nothing for native systemd units.
+    It is useful to simplify maintainer scripts, since it allows executing
+    this command for sysvinit/openrc
+    systems, and deb-systemd-invoke for systemd systems
+  * Update Standards-Version
+  * deb-systemd-*: Invoke perl interpreter directly in /usr/bin.
+    Do not go through PATH, and avoid possibly using a user-installed
+    interpreter
+  * Bump debhelper compat level to 11
+  * Fix manpage references in d/copyright.
+    They were not updated when the manpages were converted to rst
+  * Replace usage of dpkg-parsechangelog with pkg-info.mk provided by dpkg-dev
+
+  [ Daniele Nicolodi ]
+  * deb-systemd-helper: Fix typo in man page
+  * d/rules: Fix man pages header and footer.
+    Pass options to pod2mn to get correct header and footer content.
+  * deb-systemd-helper: Add comment explaining why 'systemctl preset' is used
+  * tests: Move common setup code and test functions to a new helpers.pm module
+  * tests: Fix setup when TEST_ON_REAL_SYSTEM is not set
+  * tests: Do not require Linux::Clone Perl module if TEST_ON_REAL_SYSTEM is
+    set.
+    If the TEST_ON_REAL_SYSTEM environment variable is set, the bind
+    mounting of empty directories not top of system difrectoried affected
+    by the tests is skipt. Therefore, there is no need to isolate the
+    tests in a mount namespace.
+  * tests: Make sure that the tests do not clutter the host system.
+    In the mount namespace created for the tests, remount the root
+    filesystem read-only. To be able to create temporary files and
+    directories, mount a tmpfs on /tmp.
+  * autopkgtests: Drop seteup steps that are not required anymore
+  * deb-systemd-helper: Implement user instance's service handling
+  * tests: Add tests for user instance's service handling
+  * tests: Make calling 'deb-systemd-helper' in tests less verbose.
+    Removing the shell interposition in the system() calls avoids edge
+    cases in parameters handling (there were places where the randomly
+    generated unit names were not correctly quoted) and speeds up tests
+    execution.
+  * tests: Check that the root filesystemd has been marked private
+
+ -- Felipe Sateler <fsateler@debian.org>  Sun, 12 Aug 2018 10:19:38 -0300
+
 init-system-helpers (1.51+parrot1) testing; urgency=medium
 
   * Add new services to blacklist.

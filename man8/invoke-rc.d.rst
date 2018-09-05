@@ -101,6 +101,12 @@ OPTIONS
     this is usually a very bad idea for any actions other
     than start.
 
+*--skip-systemd-native*
+    Exits before doing anything if a systemd environment is detected
+    and the requested service is a native systemd unit.
+    This is useful for maintainer scripts that want to defer systemd
+    actions to ``deb-systemd-invoke``\(1p\)
+
 STATUS CODES
 ============
 

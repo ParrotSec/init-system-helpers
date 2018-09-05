@@ -119,12 +119,14 @@ postfix disabled
 postgresql disabled
 pppd-dns disabled
 procmail disabled
+redis disabled
 redis-server disabled
 redsocks disabled
 rpcbind disabled
 samba disabled
 smbd disabled
 saned disabled
+snmpd disabled
 ssh disabled
 stunnel4 disabled
 winbind disabled

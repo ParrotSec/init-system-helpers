@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 # vim:ts=4:sw=4:expandtab
 # © 2013 Michael Stapelberg <stapelberg@debian.org>
 #

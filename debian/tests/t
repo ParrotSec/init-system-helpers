@@ -1,9 +1,6 @@
 #!/bin/sh
 set -eu
 
-mount --make-rprivate /
-cpanm Linux::Clone
-
 export TEST_ON_REAL_SYSTEM=1
 
 for test in t/*.t; do

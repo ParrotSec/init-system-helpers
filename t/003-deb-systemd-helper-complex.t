@@ -8,47 +8,11 @@ use File::Temp qw(tempfile tempdir); # in core since perl 5.6.1
 use File::Path qw(make_path); # in core since Perl 5.001
 use File::Basename; # in core since Perl 5
 use FindBin; # in core since Perl 5.00307
-use Linux::Clone; # neither in core nor in Debian :-/
 
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃ SETUP: in a new mount namespace, bindmount tmpdirs on /etc/systemd and    ┃
-# ┃ /var/lib/systemd to start with clean directories yet use the actual       ┃
-# ┃ locations and code paths.                                                 ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+use lib "$FindBin::Bin/.";
+use helpers;
 
-my $dsh = "$FindBin::Bin/../script/deb-systemd-helper";
-
-sub _unit_check {
-    my ($unit_file, $cmd, $cb, $verb) = @_;
-
-    my $retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh $cmd $unit_file");
-    isnt($retval, -1, 'deb-systemd-helper could be executed');
-    ok(!($retval & 127), 'deb-systemd-helper did not exit due to a signal');
-    $cb->($retval >> 8, 0, "random unit file $unit_file $verb $cmd");
-}
-
-sub is_enabled { _unit_check($_[0], 'is-enabled', \&is, 'is') }
-sub isnt_enabled { _unit_check($_[0], 'is-enabled', \&isnt, 'isnt') }
-
-sub is_debian_installed { _unit_check($_[0], 'debian-installed', \&is, 'is') }
-sub isnt_debian_installed { _unit_check($_[0], 'debian-installed', \&isnt, 'isnt') }
-
-my $retval = Linux::Clone::unshare Linux::Clone::NEWNS;
-BAIL_OUT("Cannot unshare(NEWNS): $!") if $retval != 0;
-
-sub bind_mount_tmp {
-    my ($dir) = @_;
-    my $tmp = tempdir(CLEANUP => 1);
-    system("mount -n --bind $tmp $dir") == 0
-        or BAIL_OUT("bind-mounting $tmp to $dir failed: $!");
-    return $tmp;
-}
-
-unless ($ENV{'TEST_ON_REAL_SYSTEM'}) {
-    my $etc_systemd = bind_mount_tmp('/etc/systemd');
-    my $lib_systemd = bind_mount_tmp('/lib/systemd');
-    my $var_lib_systemd = bind_mount_tmp('/var/lib/systemd');
-}
+test_setup();
 
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃ Create two unit files with random names; one refers to the other (Also=). ┃
@@ -114,7 +78,7 @@ unless ($ENV{'TEST_ON_REAL_SYSTEM'}) {
        'multi-user.target.wants does not exist yet');
 }
 
-$retval = system("DPKG_MAINTSCRIPT_PACKAGE=test $dsh enable $random_unit1");
+my $retval = dsh('enable', $random_unit1);
 my %links = map { (basename($_), readlink($_)) }
     ("/etc/systemd/system/multi-user.target.wants/$random_unit1",
      "/etc/systemd/system/multi-user.target.wants/$random_unit2");
