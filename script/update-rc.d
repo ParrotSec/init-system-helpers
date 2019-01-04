@@ -129,10 +129,25 @@ sub make_sysv_links {
 sub make_systemd_links {
     my ($scriptname, $action) = @_;
 
+    # If called by systemctl (via systemd-sysv-install), do nothing to avoid
+    # an endless loop.
+    if (defined($ENV{_SKIP_SYSTEMD_NATIVE}) && $ENV{_SKIP_SYSTEMD_NATIVE} == 1) {
+        return;
+    }
+
+    # If systemctl is available, let's use that to create the symlinks.
+    if (-x "/bin/systemctl") {
+        # Set this env var to avoid loop in systemd-sysv-install.
+        local $ENV{SYSTEMCTL_SKIP_SYSV} = 1;
+        # Use --quiet to mimic the old update-rc.d behaviour.
+        system("systemctl", "--quiet", "$action", "$scriptname");
+        return;
+    }
+
     # In addition to the insserv call we also enable/disable the service
     # for systemd by creating the appropriate symlink in case there is a
-    # native systemd service. We need to do this on our own instead of
-    # using systemctl because systemd might not even be installed yet.
+    # native systemd service. In case systemd is not installed we do this
+    # on our own instead of using systemctl.
     my $service_path;
     if (-f "/etc/systemd/system/$scriptname.service") {
         $service_path = "/etc/systemd/system/$scriptname.service";
@@ -293,14 +308,16 @@ sub create_sequence {
     };
 
     my @sequence;
-    if ($openrc_installed) {
-        push @sequence, $openrc;
-    }
     if ($insserv_installed) {
         push @sequence, $sysv_insserv;
     }
     else {
         push @sequence, $sysv_plain;
+    }
+    # OpenRC has to be after sysv_{insserv,plain} because it depends on them to synchronize
+    # states.
+    if ($openrc_installed) {
+        push @sequence, $openrc;
     }
     push @sequence, $systemd;
 

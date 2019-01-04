@@ -8,16 +8,16 @@ Files: debian/*
 Copyright: 2013 Michael Stapelberg <stapelberg@debian.org>
 License: BSD-3-clause
 
-Files: script/service man8/service.8
+Files: script/service man8/service.rst
 Copyright: 2006 Red Hat, Inc
  2008 Canonical Ltd
 License: GPL-2+
 
-Files: script/invoke-rc.d man8/invoke-rc.d.8.rst
+Files: script/invoke-rc.d man8/invoke-rc.d.rst
 Copyright: 2000,2001 Henrique de Moraes Holschuh <hmh@debian.org>
 License: GPL-2+
 
-Files: script/update-rc.d man8/update-rc.d.8.rst
+Files: script/update-rc.d man8/update-rc.d.rst
 Copyright: 1997-2005 Miquel van Smoorenburg <miquels@cistron.nl>
  Members of the pkg-sysvinit project
 License: GPL-2+

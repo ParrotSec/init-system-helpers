@@ -9,10 +9,10 @@ executes System-V style init script actions
 :Manual section: 8
 :Manual group: Debian GNU/Linux
 :Author:
-    Henrique Holschuh
+    Henrique de Moraes Holschuh
 
 :Version:   1 March 2001
-:Copyright: 2001 Hernique Holschuh
+:Copyright: 2001 Henrique de Moraes Holschuh
 :Licence:   GNU Public Licence v2 or Later (GPLv2+)
 
 SYNOPSIS
@@ -68,7 +68,6 @@ policies, use the *--force* switch.
 
 OPTIONS
 =======
-
 
 *--help*
     Display usage help.
@@ -192,19 +191,14 @@ is installed in the system.
 FILES
 =====
 
-
 /etc/init.d/*
     System V init scripts.
 
 /usr/sbin/policy-rc.d
     Init script policy layer helper (not required).
 
-/etc/runlevel.conf
-    file-rc runlevel configuration (if the file-rc package is being used).
-
 /etc/rc?.d/*
-    System V runlevel configuration (if the sysv-rc package is being used).
-
+    System V runlevel configuration.
 
 NOTES
 =====
@@ -213,13 +207,11 @@ NOTES
 action, and returns exit status 4 instead of exit status 0 when
 it is denied.
 
-
 BUGS
 ====
 
-Please report any bugs using the Debian bug tracking system,
-http://bugs.debian.org/, package sysv-rc or file-rc
-(depending on which version of invoke-rc.d you are using).
+See http://bugs.debian.org/sysv-rc and
+http://bugs.debian.org/init-system-helpers.
 
 SEE ALSO
 ========

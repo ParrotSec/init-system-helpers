@@ -1,5 +1,5 @@
 ===================
- invoke-rc.d
+ update-rc.d
 ===================
 
 ---------------------------------------------------------
@@ -13,7 +13,7 @@ install and remove System-V style init script links
     Miquel van Smoorenburg
 
 :Version:   14 November 2005
-:Copyright: 2001 Hernique Holschuh
+:Copyright: 2001 Henrique de Moraes Holschuh
 :Licence:   GNU Public Licence v2 or Later (GPLv2+)
 
 
@@ -223,7 +223,8 @@ Example of a command for disabling a system initialization-and-shutdown script:
 BUGS
 ====
 
-See http://bugs.debian.org/sysv-rc.
+See http://bugs.debian.org/sysv-rc and
+http://bugs.debian.org/init-system-helpers.
 
 FILES
 =====
@@ -245,6 +246,4 @@ SEE ALSO
 | *Debian Policy Manual*,
 | ``/etc/init.d/skeleton``,
 | ``insserv``\(8),
-| ``sysv-rc-conf``\(8),
-| ``bum``\(8),
 | ``init``\(8)

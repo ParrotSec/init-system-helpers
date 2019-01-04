@@ -1,8 +1,70 @@
-init-system-helpers (1.54+parrot1) testing; urgency=medium
+init-system-helpers (1.56+nmu1kali1) kali-dev; urgency=medium
 
-  * Import new Debian release.
+  * Sync with Debian
 
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Wed, 05 Sep 2018 14:35:17 +0200
+ -- Sophie Brun <sophie@offensive-security.com>  Fri, 04 Jan 2019 15:52:45 +0100
+
+init-system-helpers (1.56+nmu1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Add `runit-init' as alternative pre-dependency (Closes: #838480)
+
+ -- Dmitry Bogatov <KAction@debian.org>  Mon, 03 Dec 2018 23:10:03 +0000
+
+init-system-helpers (1.56kali1) kali-dev; urgency=medium
+
+  * Sync with Debian
+
+ -- Sophie Brun <sophie@freexian.com>  Mon, 26 Nov 2018 11:26:35 +0100
+
+init-system-helpers (1.56) unstable; urgency=medium
+
+  * update-rc.d: If systemctl is available, use it in make_systemd_links.
+    To not create an endless loop, we set SYSTEMCTL_SKIP_SYSV=1 which is
+    respected by systemd-sysv-install since v228. Add a versioned Breaks
+    against systemd accordingly.
+  * man: Fix name field of update-rc.d man page
+  * man: Stop mentioning file-rc in invoke-rc.d man page.
+    The file-rc package has been removed from the archive.
+  * man: Stop mentioning bum and sysv-rc-conf in update-rc.d man page
+  * man: Update bugtracker URLs.
+    invoke-rc.d and update-rc.d are provided by init-system-helpers
+    nowadays. Keep a reference to sysv-rc, for the sysvinit related bits.
+
+ -- Michael Biebl <biebl@debian.org>  Thu, 22 Nov 2018 00:15:24 +0100
+
+init-system-helpers (1.55kali1) kali-dev; urgency=medium
+
+  * Sync with Debian
+
+ -- Sophie Brun <sophie@freexian.com>  Fri, 26 Oct 2018 16:45:20 +0200
+
+init-system-helpers (1.55) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * d/control: Deprecating priority extra as per policy 4.0.1
+
+  [ Benda Xu ]
+  * s/update-rc.d: let OpenRC run after sysv_{insserv,plain}
+    Refactorization in 6cb72b59a0a1898939b818d8d2 made rc-update from
+    OpenRC run *before* sysv_{insserv,plain}.  OpenRC needs to
+    sychronize with /etc/rc?.d links to maintain consistency and
+    administrator configurations, therefore it has to be executed after
+    them. (Closes: #910444)
+
+  [ Felipe Sateler ]
+  * Fix manpage listings in d/copyright for rst manual pages.
+    The names were not changed correctly when the manpages were rewritten in
+    rst.
+  * Bump Standards-Version (no changes needed)
+
+ -- Felipe Sateler <fsateler@debian.org>  Wed, 24 Oct 2018 08:31:28 -0300
+
+init-system-helpers (1.54kali1) kali-dev; urgency=medium
+
+  * Sync with Debian
+
+ -- Sophie Brun <sophie@freexian.com>  Mon, 20 Aug 2018 11:39:16 +0200
 
 init-system-helpers (1.54) unstable; urgency=medium
 
@@ -75,19 +137,11 @@ init-system-helpers (1.52) unstable; urgency=medium
 
  -- Felipe Sateler <fsateler@debian.org>  Sun, 12 Aug 2018 10:19:38 -0300
 
-init-system-helpers (1.51+parrot1) testing; urgency=medium
+init-system-helpers (1.51kali1) kali-dev; urgency=medium
 
-  * Add new services to blacklist.
+  * Synchronize with Debian.
 
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Mon, 14 May 2018 19:18:55 +0200
-
-init-system-helpers (1.51+parrot0) testing; urgency=medium
-
-  * Import new Debian version.
-  * Update parrot patches.
-  * Blacklist bluetooth autostart.
-
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sun, 18 Mar 2018 20:31:45 +0100
+ -- Sophie Brun <sophie@freexian.com>  Thu, 02 Nov 2017 10:07:38 +0100
 
 init-system-helpers (1.51) unstable; urgency=high
 
@@ -98,7 +152,8 @@ init-system-helpers (1.51) unstable; urgency=high
 
   [ Felipe Sateler ]
   * Fix errors in pod2man invocations.
-    Catch errors when building pod manpages, and stop trying to build documentation for the debhelper tools
+    Catch errors when building pod manpages, and stop trying to build
+    documentation for the debhelper tools
   * Convert manpages into reStructuredText
   * update-rc.d: fix typo that was disabling all sysv scripts in defaults mode
     (Closes: #879771).
@@ -126,12 +181,11 @@ init-system-helpers (1.50) unstable; urgency=medium
 
  -- Felipe Sateler <fsateler@debian.org>  Thu, 12 Oct 2017 20:16:13 -0300
 
-init-system-helpers (1.49+parrot1) testing; urgency=medium
+init-system-helpers (1.49kali1) kali-dev; urgency=medium
 
-  * Import new Debian release.
-  * Reinclude parrot patches.
+  * Synchronize with Debian.
 
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Fri, 25 Aug 2017 00:42:03 +0200
+ -- Sophie Brun <sophie@freexian.com>  Thu, 17 Aug 2017 15:00:19 +0200
 
 init-system-helpers (1.49) unstable; urgency=low
 
@@ -148,7 +202,8 @@ init-system-helpers (1.49) unstable; urgency=low
   * Bump Standards-Version
 
   [ Iain Lane ]
-  * invoke-rc.d: Pass --full to `systemctl status', so we don't get ellipsised output.
+  * invoke-rc.d: Pass --full to `systemctl status', so we don't get ellipsised
+    output.
 
   [ Michael Biebl ]
   * Drop support for upstart
@@ -165,36 +220,11 @@ init-system-helpers (1.48) unstable; urgency=medium
 
  -- Bernd Zeimetz <bzed@debian.org>  Tue, 02 May 2017 12:20:21 +0200
 
-init-system-helpers (1.47+parrot4) testing; urgency=medium
+init-system-helpers (1.47kali1) kali-dev; urgency=medium
 
-  * Enable resolvconf.
+  * Synchronize with Debian.
 
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Thu, 06 Jul 2017 21:28:07 +0200
-
-init-system-helpers (1.47+parrot3) testing; urgency=medium
-
-  * Add systemd blacklist preset rules.
-
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Wed, 28 Jun 2017 02:05:14 +0200
-
-init-system-helpers (1.47+parrot2) testing; urgency=medium
-
-  * Manually add dradis to blacklist.
-
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Mon, 01 May 2017 02:59:49 +0200
-
-init-system-helpers (1.47+parrot1) testing; urgency=medium
-
-  * Manually add mariadb to blacklist
-  * Manually add thin to blacklist
-
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Fri, 14 Apr 2017 17:36:32 +0200
-
-init-system-helpers (1.47+parrot0) testing; urgency=medium
-
-  * Import new Debian release
-
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Fri, 03 Feb 2017 02:59:27 +0100
+ -- Sophie Brun <sophie@freexian.com>  Mon, 30 Jan 2017 16:01:11 +0100
 
 init-system-helpers (1.47) unstable; urgency=medium
 
@@ -232,7 +262,13 @@ init-system-helpers (1.47) unstable; urgency=medium
 
  -- Felipe Sateler <fsateler@debian.org>  Wed, 18 Jan 2017 10:17:07 -0300
 
- init-system-helpers (1.46) unstable; urgency=medium
+init-system-helpers (1.46kali1) kali-dev; urgency=medium
+
+  * Synchronize with Debian.
+
+ -- Sophie Brun <sophie@freexian.com>  Thu, 17 Nov 2016 10:40:25 +0100
+
+init-system-helpers (1.46) unstable; urgency=medium
 
   * Drop dh-systemd transitional package.
     It is now provided by debhelper (Closes: #841914)
@@ -242,12 +278,11 @@ init-system-helpers (1.47) unstable; urgency=medium
 
  -- Felipe Sateler <fsateler@debian.org>  Sun, 06 Nov 2016 17:02:00 -0300
 
-init-system-helpers (1.45parrot0) testing; urgency=medium
+init-system-helpers (1.45kali1) kali-dev; urgency=medium
 
-  * Import new version from debian
-  * Re-apply Parrot patches
+  * Synchronize with Debian.
 
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sun, 23 Oct 2016 17:56:52 +0200
+ -- Raphaël Hertzog <hertzog@debian.org>  Fri, 30 Sep 2016 10:12:38 +0200
 
 init-system-helpers (1.45) unstable; urgency=medium
 
@@ -292,26 +327,184 @@ init-system-helpers (1.43) unstable; urgency=medium
 
  -- Martin Pitt <mpitt@debian.org>  Mon, 12 Sep 2016 09:35:28 +0200
 
-init-system-helpers (1.42+parrot0) testing; urgency=medium
+init-system-helpers (1.42kali1) kali-dev; urgency=medium
 
-  * Minor fixes
+  * Import new version from debian
 
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Sun, 28 Aug 2016 16:34:39 +0200
+ -- Sophie Brun <sophie@freexian.com>  Wed, 17 Aug 2016 11:36:38 +0200
 
-init-system-helpers (1.33+parrot3) testing; urgency=medium
+init-system-helpers (1.42) unstable; urgency=medium
 
-  * Force live-config to be automatically enabled
+  [ Michael Biebl ]
+  * init-system-helpers: Include insserv package state when filing a bug.
+    This makes it easier to figure out if the fallback code in update-rc.d
+    was used or not.
 
- -- Lorenzo "Palinuro" Faletra <eclipse@parrotsec.org>  Wed, 15 Jun 2016 22:51:42 +0200
+  [ Felipe Sateler ]
+  * Add myself to uploaders
+  * update-rc.d: preserve S/K links when insserv is not installed.
+    If there are any links, preserve them. In fallback mode we don't care
+    about the number encoded, but we do care about the S/K state. So instead
+    of trying to renumber back to 01, preserve the actually existing links.
+    This also fixes a bug that could cause multiple enable links to be
+    created for a single service. (Closes: #832945)
 
-init-system-helpers (1.33+parrot2) testing; urgency=medium
+ -- Felipe Sateler <fsateler@debian.org>  Sat, 30 Jul 2016 17:04:28 -0400
 
-  * Add Parrot blacklist
-  * Add Parrot whitelist
-  * Add some jokes
-  * Modify the code to make network services automatically disabled
+init-system-helpers (1.41) unstable; urgency=medium
 
- -- Lorenzo "Palinuro" Faletra <eclipse@parrotsec.org>  Wed, 15 Jun 2016 17:08:56 +0200
+  * update-rc.d: Properly handle enable|disable for SysV init scripts if
+    insserv is not available. (Closes: #832582)
+
+ -- Michael Biebl <biebl@debian.org>  Wed, 27 Jul 2016 11:42:54 +0200
+
+init-system-helpers (1.40) unstable; urgency=medium
+
+  [ Martin Pitt ]
+  * update-rc.d: Add fallback if insserv is not available.
+    If insserv is not available, we are either under systemd or a chroot,
+    where the rc?.d/ link priorities don't matter, so create the
+    /etc/rc?.d/[SK]01<name> links with a hardcoded "01" priority.
+    Drop insserv dependency again.
+  * invoke-rc.d: Add SysV fallback for "systemctl is-enabled".
+    Version 1.35 switched to "systemctl is-enabled" to determine if a service
+    is enabled. This also has worked for SysV init scripts since systemd 220-1
+    (via the systemd-sysv-install wrapper), but does not yet work under
+    Jessie's systemd 215. Add a fallback to checking runlevel symlinks (for
+    any runlevel) to fix upgrades where init-system-helpers gets upgraded
+    before systemd, and to make i-s-h backportable to Jessie.
+    (Closes: #830982)
+
+  [ Michael Biebl ]
+  * invoke-rc.d: Drop fallback code for ancient upstart versions.
+    Even wheezy ships a version >= 0.9.7.
+  * invoke-rc.d: Only consider the enabled-state for start and restart.
+    We should not deny other actions, like status, stop or reload on
+    disabled services.
+  * invoke-rc.d: Don't check the enabled state twice.
+    On start|restart we already enforce the local policy and RC will be set
+    to 101, if the service was disabled.
+    Also, checking for the output of "systemctl --quiet is-enabled" is
+    problematic, as it is currently broken for non-native services [1].
+    So drop it completely.
+    [1] https://github.com/systemd/systemd/issues/3813
+  * invoke-rc.d: Allow restarting disabled-but-running services.
+    Restart services that are disabled but have been started manually.
+    A start request for a running service is a nop under systemd, so we
+    don't need to handle start and restart separately.
+
+ -- Michael Biebl <biebl@debian.org>  Tue, 26 Jul 2016 22:44:01 +0200
+
+init-system-helpers (1.39) unstable; urgency=medium
+
+  * Add an explicit dependency on insserv. For now we still need insserv in
+    update-rc.d to properly enable SysV init scripts but we can't rely on
+    other packages, like sysv-rc, anymore to pull in insserv for us, because
+    they might not be installed anymore by default.
+
+ -- Michael Biebl <biebl@debian.org>  Tue, 12 Jul 2016 22:07:16 +0200
+
+init-system-helpers (1.38) unstable; urgency=medium
+
+  * Remove dh_systemd_enable and dh_systemd_start. Those helpers will be
+    shipped by debhelper (>= 9.20160709) from now on. (Closes: #822670)
+  * Remove systemd2init and related files as we want to make dh-systemd an
+    empty, transitional package which we can drop eventually.
+  * Turn dh-systemd into a transitional package pulling in a recent enough
+    version of debhelper.
+
+ -- Michael Biebl <biebl@debian.org>  Mon, 11 Jul 2016 18:05:58 +0200
+
+init-system-helpers (1.37kali1) kali-dev; urgency=medium
+
+  * Synchronize with Debian.
+  * Disable couchdb and nfs-common by default.
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Tue, 12 Jul 2016 17:01:14 +0200
+
+init-system-helpers (1.37) unstable; urgency=medium
+
+  * Stop setting POD_MAN_DATE. It was added to support reproducible builds
+    which is no longer necessary now that pod2man suppors SOURCE_DATE_EPOCH
+    which is automatically set by dh.
+  * dh_systemd_enable: Do not mask previous declaration of $service variable.
+    (Closes: #829278)
+
+ -- Michael Biebl <biebl@debian.org>  Fri, 08 Jul 2016 17:41:37 +0200
+
+init-system-helpers (1.36) unstable; urgency=medium
+
+  [ Martin Pitt ]
+  * init: Don't depend on sysvinit-core when building on/for Ubuntu and
+    derivatives.
+  * init: Drop "essential" from the package description as it is not essential
+    any more.
+  * invoke-rc.d: Quiesce error message if "runlevel" does not exist, which is
+    now the case in chroots since init stopped being essential.
+    (Closes: #827376)
+  * update-rc.d: Testing for /etc/init.d/mountkernfs.sh is not sufficient as
+    initscripts might only be unpacked but not configured yet (during
+    debootstrap). Thus test if /etc/rcS.d/S??mountkernfs.sh exists. Thanks to
+    Felipe Sateler for the idea! (Closes: #824804)
+  * init-system-helpers: Ship README.invoke-rc.d and README.policy-rc.d.
+  * invoke-rc.d.8: Update the SEE ALSO link to README.policy-rc.d.
+    (Closes: #358496)
+  * service.8: Document that this starts systemd units as well.
+    (Closes: #758139)
+  * invoke-rc.d: Show "systemctl status" on a failed (re)start if running
+    under systemd. This makes logs with failed package installations much more
+    useful, and human users will most likely do exactly that anyway.
+    (LP: #1596056)
+
+  [ Luca Boccassi ]
+  * dh_systemd_enable: Add support for installing templated service units.
+    (Closes: #770344)
+  * dh_systemd_enable: Add support for installing path units.
+    (Closes: #768609)
+
+ -- Martin Pitt <mpitt@debian.org>  Tue, 28 Jun 2016 22:10:37 +0200
+
+init-system-helpers (1.35) unstable; urgency=medium
+
+  * invoke-rc.d: When running under systemd, query systemctl is-enabled
+    instead of checking for rc?.d/ links. This allows operation without
+    sysv-rc with packages that ship native systemd units. Packages which only
+    ship an init.d script continue to need sysv-rc and runlevels, of course.
+    (Closes: #827191, LP: #1587903)
+
+ -- Martin Pitt <mpitt@debian.org>  Sat, 18 Jun 2016 19:14:17 +0200
+
+init-system-helpers (1.34) unstable; urgency=medium
+
+  [ Martin Pitt ]
+  * Make "init" not essential any more and lower priority from "required" to
+    "important", so that we can drop it from minimal chroots and docker
+    containers at some point. Explicitly mark init-system-helpers as essential
+    now (before it was only transitively essential due to  init depending on
+    it). (Closes: #756023)
+  * Mark init "Important: yes" instead, so that one does not accidentally
+    uninstall it.
+  * deb-systemd-invoke: Accept policy-rc.d exit code 0 as "allowed" in
+    addition to code 104, like invoke-rc.d. (Closes: #825075)
+
+  [ Dan Nicholson ]
+  * deb-systemd-helper, dh_systemd_start: Use split rather than
+    Text::ParseWords::shellwords since the latter will strip valid \
+    escapes from unit names. The values then need to have leading and
+    trailing quotes stripped. (Closes: #820359)
+  * dh_systemd_enable: Drop unused Text::ParseWords use.
+
+ -- Martin Pitt <mpitt@debian.org>  Mon, 30 May 2016 15:52:48 +0200
+
+init-system-helpers (1.33+kali1) kali-dev; urgency=medium
+
+  [ Raphaël Hertzog ]
+  * Fix the test suite due to our changes to use "systemctl preset".
+
+  [ Sophie Brun ]
+  * Synchronize with Debian. 
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Tue, 15 Mar 2016 18:28:55 +0100
 
 init-system-helpers (1.33) unstable; urgency=medium
 
@@ -382,6 +575,12 @@ init-system-helpers (1.30) unstable; urgency=medium
 
  -- Martin Pitt <mpitt@debian.org>  Tue, 26 Apr 2016 10:01:46 +0200
 
+init-system-helpers (1.29+kali1) kali-dev; urgency=medium
+
+  * Synchronize with Debian.
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Tue, 08 Mar 2016 11:48:17 +0100
+
 init-system-helpers (1.29) unstable; urgency=medium
 
   [ Michael Biebl ]
@@ -408,6 +607,25 @@ init-system-helpers (1.29) unstable; urgency=medium
   * script/update-rc.d: Add OpenRC support.
 
  -- Martin Pitt <mpitt@debian.org>  Mon, 29 Feb 2016 13:24:34 +0100
+
+init-system-helpers (1.28+kali3) kali-dev; urgency=medium
+
+  * Add patch to use systemctl preset. Closes: #772555
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Fri, 04 Mar 2016 15:56:19 +0100
+
+init-system-helpers (1.28+kali2) kali-dev; urgency=medium
+
+  * Fix build failure when building arch: any only.
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Mon, 22 Feb 2016 11:52:27 +0100
+
+init-system-helpers (1.28+kali1) kali-dev; urgency=medium
+
+  * Replace update-rc.d by our own wrapper to disable some services. Hopefully
+    we can get rid of this once we have working systemd preset...
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Mon, 22 Feb 2016 11:40:53 +0100
 
 init-system-helpers (1.28) unstable; urgency=medium
 
