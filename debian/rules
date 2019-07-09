@@ -30,7 +30,7 @@ SBIN = debian/init-system-helpers/usr/sbin
 override_dh_install-indep:
 	dh_install
 	mv $(SBIN)/update-rc.d $(SBIN)/debian-update-rc.d
-	cp script/parrot-update-rc.d $(SBIN)/update-rc.d
+	cp script/kali-update-rc.d $(SBIN)/update-rc.d
 	[ ! -d debian/init-system-helpers ] || sed -i 's/__VERSION__/$(DEB_VERSION)/' debian/init-system-helpers/usr/sbin/service
 
 
@@ -38,7 +38,7 @@ override_dh_gencontrol:
 	if dpkg-vendor --derives-from ubuntu; then \
 		dh_gencontrol -- -Valt:sysvinit=""; \
 	else \
-		dh_gencontrol -- -Valt:sysvinit="| sysvinit-core | runit-init"; \
+		dh_gencontrol -- -Valt:sysvinit="| sysvinit-core"; \
 	fi
 
 %:
