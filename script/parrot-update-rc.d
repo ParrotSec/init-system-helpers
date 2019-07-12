@@ -33,7 +33,7 @@ if (exists $ENV{'DPKG_RUNNING_VERSION'} and
     # We're in a maint-script and we're about to install a new init script
     if (exists $status_wanted{$bn}) {
 	if ($status_wanted{$bn} eq "disabled") {
-	    print STDERR "update-rc.d: As per Kali policy, $bn init script is left disabled.\n";
+	    print STDERR "update-rc.d: $bn is in our deadpool blacklist! YOU SHALL NOT PASS!\n";
 	    system("/usr/sbin/debian-update-rc.d", @orig_argv);
 	    system("/usr/sbin/debian-update-rc.d", $bn, "disable");
 	    exit 0;
@@ -44,7 +44,7 @@ if (exists $ENV{'DPKG_RUNNING_VERSION'} and
 	if ($header->{'required-start'} =~ /\$network/ ||
 	    $header->{'should-start'} =~ /\$network/)
 	{
-	    print STDERR "update-rc.d: It looks like a network service, we disable it.\n";
+	    print STDERR "update-rc.d: It looks like a network service! YOU SHALL NOT PASS!\n";
 	    system("/usr/sbin/debian-update-rc.d", @orig_argv);
 	    system("/usr/sbin/debian-update-rc.d", $bn, "disable");
 	    exit 0;
@@ -91,29 +91,53 @@ sub parse_lsb_header {
 
 __DATA__
 #
-# List of blacklisted init scripts
+# Deadpool
 #
 apache2 disabled
 avahi-daemon disabled
 bluetooth disabled
 couchdb disabled
+clamav-daemon disabled
+clamav-freshclam disabled
 cups disabled
 dictd disabled
+dhcpcd disabled
+dradis disabled
 exim4 disabled
+greenbone-security-assistant disabled
 iodined disabled
+mariadb disabled
 minissdpd disabled
 nfs-common disabled
+nginx disabled
+nmbd disabled
 openbsd-inetd disabled
+openvas-manager disabled
+openvas-scanner disabled
+polipo disabled
 postfix disabled
 postgresql disabled
+pppd-dns disabled
+procmail disabled
+redis disabled
+redis-server disabled
+redsocks disabled
 rpcbind disabled
+samba disabled
+smbd disabled
 saned disabled
+snmpd disabled
 ssh disabled
+stunnel4 disabled
 winbind disabled
+thin disabled
 tinyproxy disabled
+tor disabled
+udftools disabled
+python-faraday disabled
 pure-ftpd disabled
 #
-# List of whitelisted init scripts
+# Whitelist
 #
 acpid enabled
 acpi-fakekey enabled
@@ -148,6 +172,9 @@ keymap.sh enabled
 kmod enabled
 libvirt-bin enabled
 libvirt-guests enabled
+lightdm enabled
+live-config enabled
+live-boot enabled
 loadcpufreq enabled
 lvm2 enabled
 lxc enabled
@@ -162,12 +189,14 @@ mountnfs.sh enabled
 mtab.sh enabled
 networking enabled
 network-manager enabled
+nfs-common enabled
 pppd-dns enabled
 procps enabled
 pulseaudio enabled
 qemu-kvm enabled
 rc.local enabled
 rdnssd enabled
+resolvconf enabled
 restorecond enabled
 rmnologin enabled
 rsync enabled

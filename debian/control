@@ -1,17 +1,14 @@
 Source: init-system-helpers
 Section: admin
 Priority: optional
-XSBC-Original-Maintainer: Debian systemd Maintainers <pkg-systemd-maintainers@lists.alioth.debian.org>
-Maintainer: Kali Developers <devel@kali.org>
-Uploaders: Michael Biebl <biebl@debian.org>,
-           Martin Pitt <mpitt@debian.org>,
-           Felipe Sateler <fsateler@debian.org>
+Maintainer: Parrot Dev Team <team@parrotsec.org>
+Uploaders: Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>
 Build-Depends: debhelper (>= 11),
                perl:any,
                python3-docutils
 Standards-Version: 4.2.1
-Vcs-Git: https://gitlab.com/kalilinux/packages/init-system-helpers.git
-Vcs-Browser: https://gitlab.com/kalilinux/packages/init-system-helpers
+Vcs-Git: https://nest.parrotsec.org/debian-packages/init-system-helpers.git
+Vcs-Browser: https://nest.parrotsec.org/debian-packages/init-system-helpers
 
 Package: init-system-helpers
 Architecture: all
