@@ -1,3 +1,9 @@
+init-system-helpers (1.57+parrot2) rolling; urgency=medium
+
+  * Re-enable bluetoothd daemon.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Tue, 20 Aug 2019 17:55:28 +0200
+
 init-system-helpers (1.57+parrot1) testing; urgency=medium
 
   * Import new Debian release.

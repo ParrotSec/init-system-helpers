@@ -95,7 +95,6 @@ __DATA__
 #
 apache2 disabled
 avahi-daemon disabled
-bluetooth disabled
 couchdb disabled
 clamav-daemon disabled
 clamav-freshclam disabled
@@ -147,6 +146,7 @@ anacron enabled
 atd enabled
 atop enabled
 binfmt-support enabled
+bluetooth enabled
 bootlogs enabled
 bootmisc.sh enabled
 checkfs.sh enabled
