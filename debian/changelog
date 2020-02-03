@@ -1,3 +1,9 @@
+init-system-helpers (1.57+parrot2+lts1) rolling; urgency=medium
+
+  * Rebuild for devuan.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Mon, 03 Feb 2020 13:02:03 +0100
+
 init-system-helpers (1.57+parrot2) rolling; urgency=medium
 
   * Re-enable bluetoothd daemon.

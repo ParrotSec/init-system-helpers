@@ -7,8 +7,8 @@ Build-Depends: debhelper (>= 11),
                perl:any,
                python3-docutils
 Standards-Version: 4.2.1
-Vcs-Git: https://nest.parrotsec.org/debian-packages/init-system-helpers.git
-Vcs-Browser: https://nest.parrotsec.org/debian-packages/init-system-helpers
+Vcs-Git: https://nest.parrot.sh/packages/debian/init-system-helpers.git
+Vcs-Browser: https://nest.parrot.sh/packages/debian/init-system-helpers
 
 Package: init-system-helpers
 Architecture: all
