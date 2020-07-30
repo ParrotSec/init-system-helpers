@@ -38,7 +38,7 @@ override_dh_gencontrol:
 	if dpkg-vendor --derives-from ubuntu; then \
 		dh_gencontrol -- -Valt:sysvinit=""; \
 	else \
-		dh_gencontrol -- -Valt:sysvinit="| sysvinit-core | runit-init"; \
+		dh_gencontrol -- -Valt:sysvinit="| sysvinit-core"; \
 	fi
 
 %:

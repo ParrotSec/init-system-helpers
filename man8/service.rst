@@ -12,7 +12,7 @@ run a System V init script
     Miloslav Trmac <mitr@redhat.com>,
     Petter Reinholdtsen <pere@hungry.com>
 
-:Version:   Jan 206
+:Version:   Jan 2006
 :Copyright: 2006 Red Hat, Inc.,  Petter Reinholdtsen <pere@hungry.com>
 :Licence:   GNU Public Licence v2 (GPLv2)
 
@@ -52,7 +52,6 @@ As a special case, if *COMMAND* is ``--full-restart``, the script is run
 twice, first with the ``stop`` command, then with the ``start``
 command. Note, that unlike ``update-rc.d``\(8\), ``service`` does not
 check ``/usr/sbin/policy-rc.d``.
-
 
 ``service --status-all`` runs all init scripts, in alphabetical order, with
 the ``status`` command. The status is [ + ] for running services, [ - ] for

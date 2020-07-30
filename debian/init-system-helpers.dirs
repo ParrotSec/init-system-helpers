@@ -7,4 +7,5 @@
 /etc/rc6.d
 /etc/rcS.d
 /etc/systemd/system
+/etc/systemd/user
 /var/lib/systemd

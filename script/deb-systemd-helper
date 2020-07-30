@@ -603,7 +603,8 @@ for my $scriptname (@ARGV) {
         unmask_service($scriptname, $service_path);
         # Clean up the state dir if it’s empty, or at least clean up all empty
         # subdirectories. Necessary to cleanly pass a piuparts run.
-        rmdir_if_empty('/var/lib/systemd/deb-systemd-helper-masked');
+        rmdir_if_empty(SYSTEM_INSTANCE_MASKED_STATE_DIR);
+        rmdir_if_empty(USER_INSTANCE_MASKED_STATE_DIR);
     }
 }
 

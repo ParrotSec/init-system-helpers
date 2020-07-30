@@ -153,6 +153,8 @@ sub make_systemd_links {
         $service_path = "/etc/systemd/system/$scriptname.service";
     } elsif (-f "/lib/systemd/system/$scriptname.service") {
         $service_path = "/lib/systemd/system/$scriptname.service";
+    } elsif (-f "/usr/lib/systemd/system/$scriptname.service") {
+        $service_path = "/usr/lib/systemd/system/$scriptname.service";
     }
     if (defined($service_path)) {
         my $changed_sth;
