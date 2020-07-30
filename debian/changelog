@@ -1,8 +1,26 @@
-init-system-helpers (1.57+parrot2+lts1) rolling; urgency=medium
+init-system-helpers (1.59+parrot1) rolling-testing; urgency=medium
 
-  * Rebuild for devuan.
+  * Import new Debian release.
 
- -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Mon, 03 Feb 2020 13:02:03 +0100
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Thu, 30 Jul 2020 12:32:43 +0200
+
+init-system-helpers (1.58) unstable; urgency=medium
+
+  [ Guilhem Moulin ]
+  * Ensure dh_installsystemduser(1)-added snippets pass piuparts.
+    Claim ownership of /etc/systemd/user (like /etc/systemd/system)
+    and make `deb-systemd-helper --user unmask` remove
+    /var/lib/systemd/deb-systemd-user-helper-masked if empty
+    (like `deb-systemd-helper unmask` does for
+    /var/lib/systemd/deb-systemd-helper-masked).
+    For packages shipping user units installed with dh_installsystemduser(1).
+    (Closes: #964159)
+
+  [ Michael Biebl ]
+  * man: Fix typo in service(8) man page (Closes: #925995)
+  * update-rc.d: Consider /usr/lib/systemd/system when searching for unit files
+
+ -- Sophie Brun <sophie@offensive-security.com>  Mon, 13 Jul 2020 10:54:18 +0200
 
 init-system-helpers (1.57+parrot2) rolling; urgency=medium
 

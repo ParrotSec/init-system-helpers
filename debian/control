@@ -1,14 +1,15 @@
 Source: init-system-helpers
 Section: admin
 Priority: optional
+XSBC-Original-Maintainer: Debian systemd Maintainers <pkg-systemd-maintainers@lists.alioth.debian.org>
 Maintainer: Parrot Dev Team <team@parrotsec.org>
 Uploaders: Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>
 Build-Depends: debhelper (>= 11),
                perl:any,
                python3-docutils
 Standards-Version: 4.2.1
-Vcs-Git: https://nest.parrot.sh/packages/debian/init-system-helpers.git
-Vcs-Browser: https://nest.parrot.sh/packages/debian/init-system-helpers
+Vcs-Git: https://nest.parrotsec.org/packages/debian/init-system-helpers
+Vcs-Browser: https://nest.parrotsec.org/packages/debian/init-system-helpers
 
 Package: init-system-helpers
 Architecture: all
