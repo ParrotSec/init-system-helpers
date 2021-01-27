@@ -7,7 +7,11 @@ Uploaders: Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>
 Build-Depends: debhelper-compat (= 13),
                perl:any,
                python3-docutils
+<<<<<<< HEAD
 Standards-Version: 4.5.1
+=======
+Standards-Version: 4.2.1
+>>>>>>> 9bb3025aa98d3b5f9f46ce068a377787cc15f976
 Vcs-Git: https://nest.parrotsec.org/packages/debian/init-system-helpers
 Vcs-Browser: https://nest.parrotsec.org/packages/debian/init-system-helpers
 
