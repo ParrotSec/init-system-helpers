@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 init-system-helpers (1.60+parrot1) rolling-testing; urgency=medium
 
   * Import new Debian release.
@@ -20,12 +19,6 @@ init-system-helpers (1.59+parrot1) rolling-testing; urgency=medium
 
   * Import new Debian release.
 
-=======
-init-system-helpers (1.59+parrot1) rolling-testing; urgency=medium
-
-  * Import new Debian release.
-
->>>>>>> 9bb3025aa98d3b5f9f46ce068a377787cc15f976
  -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Thu, 30 Jul 2020 12:32:43 +0200
 
 init-system-helpers (1.58) unstable; urgency=medium
