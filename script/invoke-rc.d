@@ -484,12 +484,6 @@ if test x${FORCE} != x || test ${RC} -eq 104 ; then
 	    fi
 
             if [ -n "$is_systemd" ]; then
-                if [ -n "$DPKG_MAINTSCRIPT_PACKAGE" ]; then
-                    # If we are called by a maintainer script, chances are good that a
-                    # new or updated sysv init script was installed.  Reload daemon to
-                    # pick up any changes.
-                    systemctl daemon-reload
-                fi
                 if [ "$SKIP_SYSTEMD_NATIVE" = yes ] ; then
                     case $(systemctl show --value --property SourcePath "${UNIT}") in
                     /etc/init.d/*)
@@ -504,14 +498,6 @@ if test x${FORCE} != x || test ${RC} -eq 104 ; then
                 fi
                 _state=$(systemctl -p LoadState show "${UNIT}" 2>/dev/null)
 
-                # avoid deadlocks during bootup and shutdown from units/hooks
-                # which call "invoke-rc.d service reload" and similar, since
-                # the synchronous wait plus systemd's normal behaviour of
-                # transactionally processing all dependencies first easily
-                # causes dependency loops
-                if ! systemctl --quiet is-active multi-user.target; then
-                    sctl_args="--job-mode=ignore-dependencies"
-                fi
                 case $saction in
                     start|restart|try-restart)
                         [ "$_state" != "LoadState=masked" ] || exit 0
@@ -523,6 +509,11 @@ if test x${FORCE} != x || test ${RC} -eq 104 ; then
                     reload)
                         [ "$_state" != "LoadState=masked" ] || exit 0
                         _canreload="$(systemctl -p CanReload show ${UNIT} 2>/dev/null)"
+                        # Don't block on reload requests during bootup and shutdown
+                        # from units/hooks and simply schedule the task.
+                        if ! systemctl --quiet is-system-running; then
+                            sctl_args="--no-block"
+                        fi
                         if [ "$_canreload" = "CanReload=no" ]; then
                             "${INITDPREFIX}${INITSCRIPTID}" "${saction}" "$@" && exit 0
                         else

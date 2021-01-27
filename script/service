@@ -161,14 +161,6 @@ update_openrc_started_symlinks() {
 if [ -n "$is_systemd" ]
 then
    UNIT="${SERVICE%.sh}.service"
-   # avoid deadlocks during bootup and shutdown from units/hooks
-   # which call "invoke-rc.d service reload" and similar, since
-   # the synchronous wait plus systemd's normal behaviour of
-   # transactionally processing all dependencies first easily
-   # causes dependency loops
-   if ! systemctl --quiet is-active multi-user.target; then
-       sctl_args="--job-mode=ignore-dependencies"
-   fi
 
    case "${ACTION}" in
       restart|status|try-restart)
@@ -188,6 +180,11 @@ then
       ;;
       reload)
          _canreload="$(systemctl -p CanReload show ${UNIT} 2>/dev/null)"
+         # Don't block on reload requests during bootup and shutdown
+         # from units/hooks and simply schedule the task.
+         if ! systemctl --quiet is-system-running; then
+              sctl_args="--no-block"
+         fi
          if [ "$_canreload" = "CanReload=no" ]; then
             # The reload action falls back to the sysv init script just in case
             # the systemd service file does not (yet) support reload for a

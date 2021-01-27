@@ -95,25 +95,24 @@ __DATA__
 #
 apache2 disabled
 avahi-daemon disabled
+bluetooth disabled
 couchdb disabled
-clamav-daemon disabled
-clamav-freshclam disabled
 cups disabled
-dictd disabled
 dhcpcd disabled
 dradis disabled
+dictd disabled
 exim4 disabled
 greenbone-security-assistant disabled
+gvm disabled
 iodined disabled
 mariadb disabled
 minissdpd disabled
-nfs-common disabled
 nginx disabled
 nmbd disabled
+nfs-common disabled
 openbsd-inetd disabled
 openvas-manager disabled
 openvas-scanner disabled
-polipo disabled
 postfix disabled
 postgresql disabled
 pppd-dns disabled
@@ -135,8 +134,9 @@ tor disabled
 udftools disabled
 python-faraday disabled
 pure-ftpd disabled
+
 #
-# Whitelist
+# List of whitelisted init scripts
 #
 acpid enabled
 acpi-fakekey enabled
@@ -146,7 +146,6 @@ anacron enabled
 atd enabled
 atop enabled
 binfmt-support enabled
-bluetooth enabled
 bootlogs enabled
 bootmisc.sh enabled
 checkfs.sh enabled
@@ -189,7 +188,6 @@ mountnfs.sh enabled
 mtab.sh enabled
 networking enabled
 network-manager enabled
-nfs-common enabled
 pppd-dns enabled
 procps enabled
 pulseaudio enabled

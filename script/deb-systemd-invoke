@@ -86,12 +86,12 @@ if ($action eq "start" || $action eq "restart") {
     my @start_units = ();
     for my $unit (@units) {
         my $unit_installed = 0;
-        my $enabled_output = `/bin/systemctl is-enabled -- '$unit'`;
+        my $enabled_output = `systemctl is-enabled -- '$unit'`;
         # matching enabled and enabled-runtime as an installed non static unit
         if ($enabled_output =~ /enabled/) {
             $unit_installed = 1;
         }
-        system('/bin/systemctl', '--quiet', 'is-active', '--', $unit);
+        system('systemctl', '--quiet', 'is-active', '--', $unit);
         my $unit_active = $?>>8 == 0 ? 1 : 0;
         if (!$unit_installed && $action eq "start") {
             print STDERR "$unit is a disabled or a static unit, not starting it.\n";
@@ -103,9 +103,9 @@ if ($action eq "start" || $action eq "restart") {
         }
     }
     if (@start_units) {
-        exec('/bin/systemctl', $action, @start_units) or die("Could not execute systemctl: $!");
+        exec('systemctl', $action, @start_units) or die("Could not execute systemctl: $!");
     }
     exit(0);
 } else {
-    exec '/bin/systemctl', @ARGV;
+    exec('systemctl', @ARGV);
 }
