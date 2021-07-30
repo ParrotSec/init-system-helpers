@@ -1,3 +1,9 @@
+init-system-helpers (1.60+parrot2) lts; urgency=medium
+
+  * Rebuild package for Parrot 5.0.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Fri, 30 Jul 2021 19:37:32 +0200
+
 init-system-helpers (1.60+parrot1) rolling-testing; urgency=medium
 
   * Import new Debian release.
