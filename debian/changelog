@@ -1,3 +1,10 @@
+init-system-helpers (1.64+parrot1) parrot-updates; urgency=medium
+
+  * Enable ssh.
+  * Bump version to override new debian backports version.
+
+ -- Lorenzo "Palinuro" Faletra <palinuro@parrotsec.org>  Mon, 08 Aug 2022 04:01:02 +0200
+
 init-system-helpers (1.60+parrot2) lts; urgency=medium
 
   * Rebuild package for Parrot 5.0.

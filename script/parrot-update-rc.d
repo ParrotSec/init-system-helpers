@@ -125,7 +125,6 @@ samba disabled
 smbd disabled
 saned disabled
 snmpd disabled
-ssh disabled
 stunnel4 disabled
 winbind disabled
 thin disabled
